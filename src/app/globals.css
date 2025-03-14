@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+:root {
+  --font-dm-sans: 'DM Sans', sans-serif;
+}
+
 .loader {
   width: 50px;
   height: 50px;
@@ -8,6 +12,10 @@
   border-radius: 50%;
   box-sizing: border-box;
   animation: animloader 1s ease-in infinite;
+}
+
+body {
+  font-family: var(--font-dm-sans);
 }
 
 @keyframes animloader {
