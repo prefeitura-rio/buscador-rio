@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react';
-import { ArrowRightIcon } from 'lucide-react';
+import { ArrowRightIcon, TrendingUp } from 'lucide-react';
 // import { ArrowRightIcon, Plus, Image as ImageIcon, Mic } from 'lucide-react';
 import Image from 'next/image';
 import "./globals.css"
@@ -10,6 +10,12 @@ export default function Home() {
   const [query, setQuery] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const router = useRouter()
+
+  const popularSearches = [
+    { icon: 'trend', text: 'neymar jr' },
+    { icon: 'trend', text: 'amado batista'},
+    { icon: 'trend', text: 'caso vitória' },
+  ];
 
   return (
     <div 
@@ -27,20 +33,37 @@ export default function Home() {
           Fale com a gente! <br /> Como podemos ajudar?
         </h1>
 
-        {/* Campo de pesquisa */}
+        {/* Campo de pesquisa e sugestões */}
         <div className="relative mt-6 w-full max-w-md sm:max-w-3xl">
-          <input
-            type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
-            className="w-full p-4 pl-6 pr-14  bg-white rounded-full focus:outline-none  text-gray-700 text-lg"
-            placeholder="O que você está precisando?"
-          />
-          <button className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-600">
-            <ArrowRightIcon size={24} />
-          </button>
+          <div className={`absolute w-full bg-white rounded-3xl shadow-lg transition-all duration-300 overflow-hidden ${isFocused ? 'max-h-[600px]' : 'max-h-[60px]'}`}>
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
+              className="w-full p-4 pl-6 pr-14 bg-white focus:outline-none text-gray-700 text-lg border-b border-gray-100"
+              placeholder="O que você está precisando?"
+            />
+            <button className="absolute right-4 top-[18px] text-gray-600">
+              <ArrowRightIcon size={24} />
+            </button>
+
+            {/* Sugestões */}
+            <div className="p-4">
+              <h2 className="text-sm font-semibold text-gray-500 mb-4">MAIS POPULARES AGORA</h2>
+              <div className="space-y-3">
+                {popularSearches.map((item, index) => (
+                  <div key={index} className="flex items-center gap-3 hover:bg-gray-50 p-2 rounded-lg cursor-pointer">
+                   <TrendingUp size={16} className="text-gray-400" />
+                    <div>
+                      <div className="text-gray-700">{item.text}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Botões de adicionar arquivos, imagem e áudio */}
