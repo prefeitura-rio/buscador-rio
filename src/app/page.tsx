@@ -8,7 +8,15 @@ export default function Home() {
   const [query, setQuery] = useState('');
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-[#F8F8F8] relative">
+    <div 
+      className="flex flex-col items-center justify-center min-h-screen relative"
+      style={{
+        backgroundImage: 'url("/background-pattern.svg")',
+        backgroundPosition: 'center',
+        backgroundSize: '100% auto',
+        backgroundColor: '#F8F8F8'
+      }}
+    >
 
       {/* Logo da Prefeitura */}
       <div className="absolute top-10 flex items-center gap-2">
