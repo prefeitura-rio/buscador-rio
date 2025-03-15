@@ -165,8 +165,10 @@ export default function Home() {
                           router.push(`/search-result?q=${encodeURIComponent(item.text)}`);
                         }}
                       >
-                        <TrendingUp size={16} className="text-gray-400" />
-                        <div className="text-gray-700">{item.text}</div>
+                        <div className="flex-shrink-0">
+                          <TrendingUp size={16} className="text-gray-400" />
+                        </div>
+                        <div className="text-gray-700 text-base">{item.text}</div>
                       </div>
                     ))}
                   </div>
