@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react';
-import { ArrowRightIcon, TrendingUp, ExternalLinkIcon } from 'lucide-react';
+import { ArrowRightIcon, TrendingUp, ExternalLinkIcon, X } from 'lucide-react';
 // import { ArrowRightIcon, Plus, Image as ImageIcon, Mic } from 'lucide-react';
 import Image from 'next/image';
 import "./globals.css"
@@ -45,6 +45,13 @@ export default function Home() {
       setResults([]);
     }
   };
+
+  const clearSearch = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setQuery('');
+    setResults([]);
+  };
   
   return (
     <div 
@@ -77,12 +84,26 @@ export default function Home() {
               onChange={handleSearch}
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
-              className="w-full p-4 pl-6 pr-14 bg-white focus:outline-none text-gray-700 text-lg border-b border-gray-100"
+              className="w-full p-4 pl-6 pr-24 bg-white focus:outline-none text-gray-700 text-lg border-b border-gray-100"
               placeholder="O que você está precisando?"
             />
-            <button className="absolute right-4 top-[18px] text-gray-600">
-              <ArrowRightIcon size={24} />
-            </button>
+            <div className="absolute right-4 top-[18px] flex items-center gap-2">
+              {query && (
+                <>
+                  <button 
+                    onClick={clearSearch}
+                    onMouseDown={(e) => e.preventDefault()}
+                    className="text-gray-400 hover:text-gray-600 cursor-pointer"
+                  >
+                    <X size={24} />
+                  </button>
+                  <div className="h-6 w-[1px] bg-gray-200"></div>
+                </>
+              )}
+              <button className="text-gray-600 cursor-pointer">
+                <ArrowRightIcon size={24} />
+              </button>
+            </div>
 
             {/* Resultados da Pesquisa ou Sugestões Populares */}
             <div className="p-4 max-h-[350px] overflow-y-auto mr-2">
