@@ -22,7 +22,7 @@ export default function Home() {
   const popularSearches = [
     { icon: 'trend', text: 'Quero pagar o meu IPTU' },
     { icon: 'trend', text: 'Como mudar de titular na conta de luz?'},
-    { icon: 'trend', text: 'Como solicitar a minha carteirinha de estudante da prefeitura?' },
+    { icon: 'trend', text: 'Minha rua está sem luz' },
   ];
 
   const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
