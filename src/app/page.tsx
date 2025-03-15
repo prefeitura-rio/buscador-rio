@@ -12,9 +12,9 @@ export default function Home() {
   const router = useRouter()
 
   const popularSearches = [
-    { icon: 'trend', text: 'neymar jr' },
-    { icon: 'trend', text: 'amado batista'},
-    { icon: 'trend', text: 'caso vitória' },
+    { icon: 'trend', text: 'Como pagar o meu IPTU?' },
+    { icon: 'trend', text: 'Quantas vezes o Rio é melhor que São Paulo?'},
+    { icon: 'trend', text: 'Como solicitar a minha carteirinha de estudante?' },
   ];
 
   return (
@@ -27,7 +27,7 @@ export default function Home() {
         <Image src="/logo_prefeitura.svg" alt="Prefeitura do Rio" width={80} height={100} className="mb-6" />
       </div>
 
-      <div className={`flex flex-col items-center w-full transition-all duration-500 ease-in-out transform ${isFocused ? '-translate-y-20' : 'translate-y-0'}`}>
+      <div className={`px-4 flex flex-col items-center w-full transition-all duration-500 ease-in-out transform ${isFocused ? '-translate-y-20' : 'translate-y-0'}`}>
         {/* Título */}
         <h1 className="pb-1 text-4xl sm:text-5xl font-semibold text-center bg-gradient-to-r from-[#27B8DB] to-[#3F38AC] bg-clip-text text-transparent">
           Fale com a gente! <br /> Como podemos ajudar?
@@ -82,7 +82,7 @@ export default function Home() {
         {/* Botão principal */}
         <button 
           onClick={() => router.push('/learn-more')} 
-          className="hover:cursor-pointer mt-10 px-5 py-2 text-white rounded-full text-md bg-linear-to-r/srgb from-[#27B8DB] to-[#3F38AC]"
+          className="hover:cursor-pointer mt-30 px-5 py-2 text-white rounded-full text-md bg-linear-to-r/srgb from-[#27B8DB] to-[#3F38AC]"
         >
           Preciso de ajuda
         </button>
