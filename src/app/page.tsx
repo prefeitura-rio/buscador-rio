@@ -101,7 +101,7 @@ export default function Home() {
                 </>
               )}
               {query && (
-              <button className="text-gray-600 cursor-pointer">
+                <button className="text-gray-400 hover:text-gray-600 cursor-pointer">
                 <ArrowRightIcon size={24} />
               </button>
               )}
