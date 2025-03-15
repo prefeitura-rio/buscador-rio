@@ -52,10 +52,22 @@ export default function Home() {
     setQuery('');
     setResults([]);
   };
-  
+
+  const handleSubmitSearch = () => {
+    if (query.trim()) {
+      router.push(`/search-result?q=${encodeURIComponent(query.trim())}`);
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSubmitSearch();
+    }
+  };
+
   return (
     <div 
-      className="flex flex-col items-center justify-center min-h-screen relative bg-[#F8F8F8] bg-[url('/background-pattern.svg')] bg-center bg-[length:100%_auto]"
+      className="flex flex-col items-center justify-center min-h-screen"
     >
       <div className="absolute inset-0 flex flex-col">
         {/* Logo da Prefeitura */}
@@ -84,6 +96,7 @@ export default function Home() {
               onChange={handleSearch}
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
+              onKeyPress={handleKeyPress}
               className="w-full p-4 pl-6 pr-24 bg-white focus:outline-none text-gray-700 text-lg border-b border-gray-100"
               placeholder="O que você está precisando?"
             />
@@ -101,9 +114,12 @@ export default function Home() {
                 </>
               )}
               {query && (
-                <button className="text-gray-400 hover:text-gray-600 cursor-pointer">
-                <ArrowRightIcon size={24} />
-              </button>
+                <button 
+                  onClick={handleSubmitSearch}
+                  className="text-gray-400 hover:text-gray-600 cursor-pointer"
+                >
+                  <ArrowRightIcon size={24} />
+                </button>
               )}
             </div>
 
