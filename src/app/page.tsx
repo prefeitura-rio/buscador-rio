@@ -1,14 +1,22 @@
 'use client'
 import { useState } from 'react';
-import { ArrowRightIcon, TrendingUp } from 'lucide-react';
+import { ArrowRightIcon, TrendingUp, ExternalLinkIcon } from 'lucide-react';
 // import { ArrowRightIcon, Plus, Image as ImageIcon, Mic } from 'lucide-react';
 import Image from 'next/image';
 import "./globals.css"
 import { useRouter } from 'next/navigation';
 
+type SearchResultItem = {
+  titulo: string;
+  descricao: string;
+  link_acesso?: string;
+};
+
 export default function Home() {
   const [query, setQuery] = useState('');
   const [isFocused, setIsFocused] = useState(false);
+  const [results, setResults] = useState<SearchResultItem[]>([]);
+  const [loading, setLoading] = useState(false);
   const router = useRouter()
 
   const popularSearches = [
@@ -17,17 +25,44 @@ export default function Home() {
     { icon: 'trend', text: 'Como solicitar a minha carteirinha de estudante?' },
   ];
 
+  const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newQuery = e.target.value;
+    setQuery(newQuery);
+
+    if (newQuery.length > 2) {
+      setLoading(true);
+      try {
+        const response = await fetch(`/api/search?q=${newQuery}`);
+        const data = await response.json();
+        setResults(data.result || []);
+      } catch (error) {
+        console.error('Error fetching search results:', error);
+        setResults([]);
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      setResults([]);
+    }
+  };
+  
   return (
     <div 
       className="flex flex-col items-center justify-center min-h-screen relative bg-[#F8F8F8] bg-[url('/background-pattern.svg')] bg-center bg-[length:100%_auto]"
     >
+      <div className="absolute inset-0 flex flex-col">
+        {/* Logo da Prefeitura */}
+        <div className="relative flex items-center gap-2 mt-10 justify-center">
+          <Image src="/logo_prefeitura.svg" alt="Prefeitura do Rio" width={80} height={100} className="mb-6" />
+        </div>
 
-      {/* Logo da Prefeitura */}
-      <div className="absolute top-10 flex items-center gap-2">
-        <Image src="/logo_prefeitura.svg" alt="Prefeitura do Rio" width={80} height={100} className="mb-6" />
+        {/* Logo IplanRio */}
+        <div className="relative mt-auto flex items-center gap-2 justify-center mb-10">
+          <Image src="/logo_iplan.svg" alt="Iplan logo" width={110} height={110} className="mb-6" />
+        </div>
       </div>
 
-      <div className={`px-4 flex flex-col items-center w-full transition-all duration-500 ease-in-out transform ${isFocused ? '-translate-y-20' : 'translate-y-0'}`}>
+      <div className={`px-4 flex flex-col items-center w-full transition-all duration-500 ease-in-out transform ${isFocused ? '-translate-y-20' : 'translate-y-0'} relative`} style={{ zIndex: 50 }}>
         {/* Título */}
         <h1 className="pb-1 text-4xl sm:text-5xl font-semibold text-center bg-gradient-to-r from-[#27B8DB] to-[#3F38AC] bg-clip-text text-transparent">
           Fale com a gente! <br /> Como podemos ajudar?
@@ -35,11 +70,11 @@ export default function Home() {
 
         {/* Campo de pesquisa e sugestões */}
         <div className="relative mt-6 w-full max-w-md sm:max-w-3xl">
-          <div className={`absolute w-full bg-white rounded-3xl shadow-lg transition-all duration-300 overflow-hidden ${isFocused ? 'max-h-[600px]' : 'max-h-[60px]'}`}>
+          <div className={`absolute w-full bg-white rounded-3xl shadow-lg transition-all duration-300 overflow-hidden ${isFocused ? 'max-h-[450px]' : 'max-h-[60px]'}`}>
             <input
               type="text"
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={handleSearch}
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
               className="w-full p-4 pl-6 pr-14 bg-white focus:outline-none text-gray-700 text-lg border-b border-gray-100"
@@ -49,19 +84,56 @@ export default function Home() {
               <ArrowRightIcon size={24} />
             </button>
 
-            {/* Sugestões */}
-            <div className="p-4">
-              <h2 className="text-sm font-semibold text-gray-500 mb-4">MAIS POPULARES AGORA</h2>
-              <div className="space-y-3">
-                {popularSearches.map((item, index) => (
-                  <div key={index} className="flex items-center gap-3 hover:bg-gray-50 p-2 rounded-lg cursor-pointer">
-                   <TrendingUp size={16} className="text-gray-400" />
-                    <div>
-                      <div className="text-gray-700">{item.text}</div>
-                    </div>
+            {/* Resultados da Pesquisa ou Sugestões Populares */}
+            <div className="p-4 max-h-[350px] overflow-y-auto mr-2">
+              {loading ? (
+                <div className="flex justify-center items-center py-2">
+                  <div className="loader ease-linear rounded-full border-t-4 border-gray-200 h-6 w-6"></div>
+                </div>
+              ) : query.length > 2 ? (
+                <div>
+                  <h2 className="text-sm font-semibold text-gray-500 mb-4">RESULTADOS DA PESQUISA</h2>
+                  <div className="space-y-3">
+                    {results.map((item, index) => (
+                      <div 
+                        key={index} 
+                        className="flex items-center gap-3 hover:bg-gray-50 p-2 rounded-lg cursor-pointer"
+                        onClick={() => item.link_acesso && window.open(item.link_acesso, '_blank')}
+                      >
+                        <TrendingUp size={16} className="text-gray-400" />
+                        <div className="flex-1">
+                          <div className="text-gray-700 font-medium">{item.titulo}</div>
+                          <div className="text-sm text-gray-500">
+                            {item.descricao.length > 50 ? `${item.descricao.substring(0, 50)}...` : item.descricao}
+                          </div>
+                        </div>
+                        {item.link_acesso && (
+                          <ExternalLinkIcon size={16} className="text-gray-400" />
+                        )}
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
+                </div>
+              ) : (
+                <div>
+                  <h2 className="text-sm font-semibold text-gray-500 mb-4">MAIS POPULARES AGORA</h2>
+                  <div className="space-y-3">
+                    {popularSearches.map((item, index) => (
+                      <div 
+                        key={index} 
+                        className="flex items-center gap-3 hover:bg-gray-50 p-2 rounded-lg cursor-pointer"
+                        onClick={() => {
+                          setQuery(item.text);
+                          handleSearch({ target: { value: item.text } } as React.ChangeEvent<HTMLInputElement>);
+                        }}
+                      >
+                        <TrendingUp size={16} className="text-gray-400" />
+                        <div className="text-gray-700">{item.text}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -86,11 +158,6 @@ export default function Home() {
         >
           Preciso de ajuda
         </button>
-      </div>
-
-      {/* Logo IplanRio */}
-      <div className="absolute bottom-10 flex items-center gap-2">
-        <Image src="/logo_iplan.svg" alt="Iplan logo" width={110} height={110} className="mb-6" />
       </div>
     </div>
   );
