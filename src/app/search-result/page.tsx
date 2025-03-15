@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { ExternalLinkIcon } from 'lucide-react'
 import SearchBar from '../components/SearchBar'
+import { useRouter } from 'next/navigation'
 
 type SearchResultItem = {
   titulo: string;
@@ -20,6 +21,7 @@ export default function SearchResult() {
   const query = searchParams?.get('q') || ''
   const [results, setResults] = useState<SearchResultItem[]>([])
   const [loading, setLoading] = useState(true)
+  const router = useRouter()
   // const [selectedFilters, setSelectedFilters] = useState({
   //   categoria: '',
   //   orgao: '',
@@ -52,12 +54,13 @@ export default function SearchResult() {
       {/* Header */}
       <div className="bg-[#008FBE] py-4">
         <div className="flex justify-center">
-          <Image 
+          <Image
+            onClick={() => router.push('/')} 
             src="/logo_prefeitura.svg" 
             alt="Prefeitura do Rio" 
             width={80} 
             height={100} 
-            className="brightness-0 invert"
+            className="brightness-0 invert cursor-pointer"
           />
         </div>
       </div>

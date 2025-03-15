@@ -1,5 +1,5 @@
 'use client'
-import { ArrowRightIcon, X } from 'lucide-react'
+import { Search, X } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
@@ -58,12 +58,14 @@ export default function SearchBar({ defaultValue = '', onSearch, className = '' 
             <div className="h-6 w-[1px] bg-gray-200"></div>
           </>
         )}
+        {query && (
         <button
           onClick={handleSubmitSearch}
           className="text-gray-400 hover:text-gray-600 cursor-pointer"
         >
-          <ArrowRightIcon size={20} />
-        </button>
+            <Search size={20} />
+          </button>
+        )}
       </div>
     </div>
   )
