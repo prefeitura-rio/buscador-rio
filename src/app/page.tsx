@@ -100,9 +100,11 @@ export default function Home() {
                   <div className="h-6 w-[1px] bg-gray-200"></div>
                 </>
               )}
+              {query && (
               <button className="text-gray-600 cursor-pointer">
                 <ArrowRightIcon size={24} />
               </button>
+              )}
             </div>
 
             {/* Resultados da Pesquisa ou Sugestões Populares */}
