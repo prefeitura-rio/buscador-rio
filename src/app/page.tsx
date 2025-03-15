@@ -131,7 +131,7 @@ export default function Home() {
                 </div>
               ) : query.length > 2 ? (
                 <div>
-                  <h2 className="text-sm font-semibold text-gray-500 mb-4">RESULTADOS DA PESQUISA</h2>
+                  <h2 className="text-sm font-semibold text-gray-500 mb-4 pl-2">RESULTADOS DA PESQUISA</h2>
                   <div className="space-y-3">
                     {results.map((item, index) => (
                       <div 
@@ -139,7 +139,6 @@ export default function Home() {
                         className="flex items-center gap-3 hover:bg-gray-50 p-2 rounded-lg cursor-pointer"
                         onClick={() => item.link_acesso && window.open(item.link_acesso, '_blank')}
                       >
-                        <TrendingUp size={16} className="text-gray-400" />
                         <div className="flex-1">
                           <div className="text-gray-700 font-medium">{item.titulo}</div>
                           <div className="text-sm text-gray-500">
@@ -155,7 +154,7 @@ export default function Home() {
                 </div>
               ) : (
                 <div>
-                  <h2 className="text-sm font-semibold text-gray-500 mb-4">MAIS POPULARES AGORA</h2>
+                  <h2 className="text-sm font-semibold text-gray-500 mb-4 pl-2">MAIS POPULARES AGORA</h2>
                   <div className="space-y-3">
                     {popularSearches.map((item, index) => (
                       <div 
