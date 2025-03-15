@@ -20,9 +20,9 @@ export default function Home() {
   const router = useRouter()
 
   const popularSearches = [
-    { icon: 'trend', text: 'Como pagar o meu IPTU?' },
-    { icon: 'trend', text: 'Quantas vezes o Rio é melhor que São Paulo?'},
-    { icon: 'trend', text: 'Como solicitar a minha carteirinha de estudante?' },
+    { icon: 'trend', text: 'Quero pagar o meu IPTU' },
+    { icon: 'trend', text: 'Como mudar de titular na conta de luz?'},
+    { icon: 'trend', text: 'Como solicitar a minha carteirinha de estudante da prefeitura?' },
   ];
 
   const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -162,7 +162,7 @@ export default function Home() {
                         className="flex items-center gap-3 hover:bg-gray-50 p-2 rounded-lg cursor-pointer"
                         onClick={() => {
                           setQuery(item.text);
-                          handleSearch({ target: { value: item.text } } as React.ChangeEvent<HTMLInputElement>);
+                          router.push(`/search-result?q=${encodeURIComponent(item.text)}`);
                         }}
                       >
                         <TrendingUp size={16} className="text-gray-400" />
