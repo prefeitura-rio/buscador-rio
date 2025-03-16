@@ -90,7 +90,7 @@ export default function Home() {
               onBlur={() => setIsFocused(false)}
               onKeyDown={handleKeyPress}
               className="w-full p-4 pl-6 pr-24 bg-white focus:outline-none text-gray-700 text-lg border-b border-gray-100"
-              placeholder="O que você está precisando?"
+              placeholder="O que você precisa?"
             />
             <div className="absolute right-4 top-[18px] flex items-center gap-2">
               {query && (
