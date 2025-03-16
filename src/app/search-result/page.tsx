@@ -5,29 +5,15 @@ import Image from 'next/image'
 import SearchBar from '../components/SearchBar'
 import SearchResultSkeleton from '../components/SearchResultSkeleton'
 import { useRouter } from 'next/navigation'
+import { SearchResultItem } from '@/types'
 
-type SearchResultItem = {
-  titulo: string;
-  descricao: string;
-  link_acesso?: string;
-  categoria?: string;
-  orgao?: string;
-  ano?: string;
-  portal?: string;
-  servico?: boolean;
-};
 
 function SearchResultContent() {
   const searchParams = useSearchParams()
   const query = searchParams?.get('q') || ''
   const [results, setResults] = useState<SearchResultItem[]>([])
   const [loading, setLoading] = useState(true)
-  // const [selectedFilters, setSelectedFilters] = useState({
-  //   categoria: '',
-  //   orgao: '',
-  //   ano: '',
-  //   portal: ''
-  // })
+
 
   useEffect(() => {
     const fetchResults = async () => {
@@ -53,43 +39,6 @@ function SearchResultContent() {
     <div className="max-w-[800px] mx-auto px-4 py-8">
       {/* Search Bar */}
       <SearchBar defaultValue={query} className="mb-6" />
-
-      {/* Filters */}
-      <div className="flex gap-4 mb-8">
-        {/* <select 
-          value={selectedFilters.categoria}
-          onChange={(e) => setSelectedFilters(prev => ({ ...prev, categoria: e.target.value }))}
-          className="px-4 py-2 rounded-full border border-gray-200 bg-white text-gray-700 text-sm"
-        >
-          <option value="">Categoria</option>
-          <option value="servicos">Serviços</option>
-          <option value="imoveis">Imóveis</option>
-        </select> */}
-
-        {/* <select 
-          value={selectedFilters.orgao}
-          onChange={(e) => setSelectedFilters(prev => ({ ...prev, orgao: e.target.value }))}
-          className="px-4 py-2 rounded-full border border-gray-200 bg-white text-gray-700 text-sm"
-        >
-          <option value="">Órgão</option>
-        </select>
-
-        <select 
-          value={selectedFilters.ano}
-          onChange={(e) => setSelectedFilters(prev => ({ ...prev, ano: e.target.value }))}
-          className="px-4 py-2 rounded-full border border-gray-200 bg-white text-gray-700 text-sm"
-        >
-          <option value="">Ano</option>
-        </select> */}
-
-        {/* <select 
-          value={selectedFilters.portal}
-          onChange={(e) => setSelectedFilters(prev => ({ ...prev, portal: e.target.value }))}
-          className="px-4 py-2 rounded-full border border-gray-200 bg-white text-gray-700 text-sm"
-        >
-          <option value="">Portal</option>
-        </select> */}
-      </div>
 
       {/* Results Count */}
       <div className="text-sm text-gray-500 mb-4">

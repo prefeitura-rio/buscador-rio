@@ -5,12 +5,10 @@ import { ArrowRightIcon, TrendingUp, ExternalLinkIcon, X } from 'lucide-react';
 import Image from 'next/image';
 import "./globals.css"
 import { useRouter } from 'next/navigation';
+import { SearchResultItem } from '@/types';
+import { popularSearches } from '@/utils/popularSearchs';
+import SearchResultSkeleton from '@/app/components/SearchResultSkeletonHome';
 
-type SearchResultItem = {
-  titulo: string;
-  descricao: string;
-  link_acesso?: string;
-};
 
 export default function Home() {
   const [query, setQuery] = useState('');
@@ -18,12 +16,6 @@ export default function Home() {
   const [results, setResults] = useState<SearchResultItem[]>([]);
   const [loading, setLoading] = useState(false);
   const router = useRouter()
-
-  const popularSearches = [
-    { icon: 'trend', text: 'Quero pagar o meu IPTU' },
-    { icon: 'trend', text: 'Como mudar de titular na conta de luz?'},
-    { icon: 'trend', text: 'Minha rua está sem luz' },
-  ];
 
   const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const newQuery = e.target.value;
@@ -96,7 +88,7 @@ export default function Home() {
               onChange={handleSearch}
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
-              onKeyPress={handleKeyPress}
+              onKeyDown={handleKeyPress}
               className="w-full p-4 pl-6 pr-24 bg-white focus:outline-none text-gray-700 text-lg border-b border-gray-100"
               placeholder="O que você está precisando?"
             />
@@ -126,28 +118,39 @@ export default function Home() {
             {/* Resultados da Pesquisa ou Sugestões Populares */}
             <div className="p-4 max-h-[350px] overflow-y-auto mr-2">
               {loading ? (
-                <div className="flex justify-center items-center py-2">
-                  <div className="loader ease-linear rounded-full border-t-4 border-gray-200 h-6 w-6"></div>
+                <div>
+                  <h2 className="text-sm font-semibold text-gray-500 mb-4 pl-2">RESULTADOS DA PESQUISA</h2>
+                  <SearchResultSkeleton />
                 </div>
               ) : query.length > 2 ? (
                 <div>
                   <h2 className="text-sm font-semibold text-gray-500 mb-4 pl-2">RESULTADOS DA PESQUISA</h2>
                   <div className="space-y-3">
                     {results.map((item, index) => (
-                      <div 
-                        key={index} 
-                        className="flex items-center gap-3 hover:bg-gray-50 p-2 rounded-lg cursor-pointer"
-                        onClick={() => item.link_acesso && window.open(item.link_acesso, '_blank')}
-                      >
-                        <div className="flex-1">
-                          <div className="text-gray-700 font-medium">{item.titulo}</div>
-                          <div className="text-sm text-gray-500">
-                            {item.descricao.length > 50 ? `${item.descricao.substring(0, 50)}...` : item.descricao}
+                      <div key={index}>
+                        <div 
+                          className="flex items-center gap-3 hover:bg-gray-50 p-2 rounded-lg cursor-pointer"
+                          onClick={() => item.link_acesso && window.open(item.link_acesso, '_blank')}
+                        >
+                          <div className="flex-1">
+                            <h3 className="text-gray-900 font-medium mb-2">{item.titulo}</h3>
+                            <div className="flex items-center gap-2 text-xs text-[#008FBE] mb-2">
+                              {item.servico === true ? (
+                                <span className="font-bold">Serviços</span>
+                              ) : (
+                                <span className="font-bold">Informações</span>
+                              )}
+                              <span className="text-gray-500">{'>'}</span>
+                              <span className="text-gray-500">lorem</span>
+                              <span className="text-gray-500">{'>'}</span>
+                              <span className="text-gray-500">ipsum</span>
+                            </div>
                           </div>
+                          {item.link_acesso && (
+                            <ExternalLinkIcon size={16} className="text-gray-400" />
+                          )}
                         </div>
-                        {item.link_acesso && (
-                          <ExternalLinkIcon size={16} className="text-gray-400" />
-                        )}
+                        {index < results.length - 1 && <hr className="border-gray-200 my-2" />}
                       </div>
                     ))}
                   </div>
@@ -157,18 +160,20 @@ export default function Home() {
                   <h2 className="text-sm font-semibold text-gray-500 mb-4 pl-2">MAIS POPULARES AGORA</h2>
                   <div className="space-y-3">
                     {popularSearches.map((item, index) => (
-                      <div 
-                        key={index} 
-                        className="flex items-center gap-3 hover:bg-gray-50 p-2 rounded-lg cursor-pointer"
-                        onClick={() => {
-                          setQuery(item.text);
-                          router.push(`/search-result?q=${encodeURIComponent(item.text)}`);
-                        }}
-                      >
-                        <div className="flex-shrink-0">
-                          <TrendingUp size={16} className="text-gray-400" />
+                      <div key={index}>
+                        <div 
+                          className="flex items-center gap-3 hover:bg-gray-50 p-2 rounded-lg cursor-pointer"
+                          onClick={() => {
+                            setQuery(item.text);
+                            router.push(`/search-result?q=${encodeURIComponent(item.text)}`);
+                          }}
+                        >
+                          <div className="flex-shrink-0">
+                            <TrendingUp size={16} className="text-gray-400" />
+                          </div>
+                          <div className="text-gray-700 text-base">{item.text}</div>
                         </div>
-                        <div className="text-gray-700 text-base">{item.text}</div>
+                        {index < popularSearches.length - 1 && <hr className="border-gray-200 my-2" />}
                       </div>
                     ))}
                   </div>
