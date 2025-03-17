@@ -43,7 +43,7 @@ export default function SearchBar({ defaultValue = '', onSearch, className = '' 
         onChange={(e) => setQuery(e.target.value)}
         onKeyDown={handleKeyPress}
         className="w-full p-4 pl-6 pr-22 rounded-full bg-white focus:outline-none text-gray-700 shadow-sm"
-        placeholder="O que você precisa?"
+        placeholder="Do que você precisa?"
       />
       <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
         {query && (

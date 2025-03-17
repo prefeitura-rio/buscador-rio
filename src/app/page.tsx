@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import { SearchResultItem } from '@/types';
 import { popularSearches } from '@/utils/popularSearchs';
 import SearchResultSkeleton from '@/app/components/SearchResultSkeletonHome';
+import Link from 'next/link';
 
 
 export default function Home() {
@@ -69,7 +70,17 @@ export default function Home() {
 
         {/* Logo IplanRio */}
         <div className="relative mt-auto flex items-center gap-2 justify-center mb-10">
-          <Image src="/logo_iplan.svg" alt="Iplan logo" width={110} height={110} className="mb-6" />
+          <span className="text-gray-500 text-xs">
+            Desenvolvido e mantido com ‪‪❤︎‬ por{' '}
+            <Link
+              href="https://iplanrio.prefeitura.rio/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-500 hover:underline"
+            >
+              IplanRio
+            </Link>
+          </span>
         </div>
       </div>
 
@@ -90,7 +101,7 @@ export default function Home() {
               onBlur={() => setIsFocused(false)}
               onKeyDown={handleKeyPress}
               className="w-full p-4 pl-6 pr-24 bg-white focus:outline-none text-gray-700 text-lg border-b border-gray-100"
-              placeholder="O que você precisa?"
+              placeholder="Do que você precisa?"
             />
             <div className="absolute right-4 top-[18px] flex items-center gap-2">
               {query && (
