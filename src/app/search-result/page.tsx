@@ -6,6 +6,7 @@ import SearchBar from '../components/SearchBar'
 import SearchResultSkeleton from '../components/SearchResultSkeleton'
 import { useRouter } from 'next/navigation'
 import { SearchResultItem } from '@/types'
+import { Facebook, Instagram, Twitter, Youtube } from 'lucide-react'
 
 
 function SearchResultContent() {
@@ -98,6 +99,7 @@ export default function SearchResult() {
       {/* Header */}
       <div className="bg-[#008FBE] py-4">
         <div className="flex justify-center">
+          <div className="mx-4 md:mx-0 w-full max-w-[760px] flex justify-between">
           <Image
             onClick={() => router.push('/')} 
             src="/logo_prefeitura.svg" 
@@ -106,6 +108,33 @@ export default function SearchResult() {
             height={100} 
             className="brightness-0 invert cursor-pointer"
           />
+          <div className="flex flex-row gap-6">
+              <button
+                className="text-white hover:text-gray-600 cursor-pointer"
+                onClick={() => window.open('https://www.instagram.com/prefeitura_rio/', '_blank')}
+              >
+                <Instagram size={20} />
+              </button>
+              <button
+                className="text-white hover:text-gray-600 cursor-pointer"
+                onClick={() => window.open('https://x.com/Prefeitura_Rio', '_blank')}
+              >
+                <Twitter size={20} />
+              </button>
+              <button
+                className="text-white hover:text-gray-600 cursor-pointer"
+                onClick={() => window.open('https://www.facebook.com/PrefeituradoRio/', '_blank')}
+              >
+                <Facebook size={20} />
+              </button>
+              <button
+                className="text-white hover:text-gray-600 cursor-pointer"
+                onClick={() => window.open('https://www.youtube.com/prefeiturario', '_blank')}
+              >
+                <Youtube size={20} />
+              </button>
+            </div>
+        </div>
         </div>
       </div>
 
