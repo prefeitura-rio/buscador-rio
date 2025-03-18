@@ -147,14 +147,14 @@ export default function Home() {
                             <h3 className="text-gray-900 font-medium mb-2">{item.titulo}</h3>
                             <div className="flex items-center gap-2 text-xs text-[#008FBE] mb-2">
                               {item.servico === true ? (
-                                <span className="font-bold">Serviços</span>
+                                <span className="font-bold">Serviço</span>
                               ) : (
-                                <span className="font-bold">Informações</span>
+                                <span className="font-bold">Informação</span>
                               )}
-                              <span className="text-gray-500">{'>'}</span>
+                              {/* <span className="text-gray-500">{'>'}</span>
                               <span className="text-gray-500">lorem</span>
                               <span className="text-gray-500">{'>'}</span>
-                              <span className="text-gray-500">ipsum</span>
+                              <span className="text-gray-500">ipsum</span> */}
                             </div>
                           </div>
                           {item.link_acesso && (
