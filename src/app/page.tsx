@@ -141,7 +141,7 @@ export default function Home() {
                       <div key={index}>
                         <div 
                           className="flex items-center gap-3 hover:bg-gray-50 p-2 rounded-lg cursor-pointer"
-                          onClick={() => item.link_acesso && window.open(item.link_acesso, '_blank')}
+                          onClick={() => item.link_carioca_digital && window.open(item.link_carioca_digital, '_blank')}
                         >
                           <div className="flex-1">
                             <h3 className="text-gray-900 font-medium mb-2">{item.titulo}</h3>
@@ -157,7 +157,7 @@ export default function Home() {
                               <span className="text-gray-500">ipsum</span> */}
                             </div>
                           </div>
-                          {item.link_acesso && (
+                          {item.link_carioca_digital && (
                             <ExternalLinkIcon size={16} className="text-gray-400" />
                           )}
                         </div>
