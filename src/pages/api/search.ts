@@ -6,9 +6,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const headers = { Authorization: `Bearer ${token}` };
 
   try {
-    const response = await fetch(`https://busca.dados.rio/search/hybrid?q=${q}&c=carioca-digital`, {
-      headers,
-    });
+    const response = await fetch(
+      `https://busca.dados.rio/search/hybrid?q=${q}&c=carioca-digital-gemini&use_gemini=true`,
+      {
+        headers,
+      }
+    );
 
     if (!response.ok) {
       throw new Error('Network response was not ok');
