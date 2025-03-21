@@ -84,7 +84,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className={`px-4 flex flex-col items-center w-full transition-all duration-500 ease-in-out transform ${isFocused ? '-translate-y-20' : 'translate-y-0'} relative`} style={{ zIndex: 50 }}>
+      <div className={`mb-30 px-4 flex flex-col items-center w-full transition-all duration-500 ease-in-out transform ${isFocused ? '-translate-y-20' : 'translate-y-0'} relative`} style={{ zIndex: 50 }}>
         {/* Título */}
         <h1 className="pb-1 text-4xl sm:text-5xl font-semibold text-center bg-gradient-to-r from-[#27B8DB] to-[#3F38AC] bg-clip-text text-transparent">
           Fale com a gente! <br /> Como podemos ajudar?
@@ -208,12 +208,12 @@ export default function Home() {
         </div> */}
 
         {/* Botão principal */}
-        <button 
+        {/* <button 
           onClick={() => router.push('/learn-more')} 
           className="hover:cursor-pointer mt-30 px-5 py-2 text-white rounded-full text-md bg-linear-to-r/srgb from-[#27B8DB] to-[#3F38AC]"
         >
           Preciso de ajuda
-        </button>
+        </button> */}
       </div>
     </div>
   );
