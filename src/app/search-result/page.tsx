@@ -54,10 +54,15 @@ function SearchResultContent() {
           {results.length > 0 ? (
             <div className="space-y-4">
               {results.map((item, index) => (
-                <div 
+                <div
                   key={index}
-                  className={`bg-white rounded-lg shadow-sm p-6 hover:bg-gray-50 ${item.link_carioca_digital ? 'cursor-pointer' : 'cursor-default'}`}
-                  onClick={() => item.link_carioca_digital && window.open(item.link_carioca_digital, '_blank')}
+                  className={`bg-white rounded-lg shadow-sm p-6 hover:bg-gray-50 ${(item.link_carioca_digital || item.link_acesso) ? 'cursor-pointer' : 'cursor-default'}`}
+                  onClick={() => {
+                    const link = item.link_carioca_digital || item.link_acesso;
+                    if (link) {
+                      window.open(link, '_blank');
+                    }
+                  }}
                 >
                   <div className="flex items-start gap-4">
                     <div className="flex-1">
@@ -73,7 +78,7 @@ function SearchResultContent() {
                         <span className="text-gray-500">{'>'}</span>
                         <span className="text-gray-500">ipsum</span> */}
                       </div>
-                      <hr className="border-gray-200 my-4" />
+                    { item.descricao && <hr className="border-gray-200 my-4" />}
                       <p className="text-gray-600 text-sm">{item.descricao}</p>
                     </div>
                   </div>

@@ -137,33 +137,36 @@ export default function Home() {
                 <div>
                   <h2 className="text-sm font-semibold text-gray-500 mb-4 pl-2">RESULTADOS DA PESQUISA</h2>
                   <div className="space-y-3">
-                    {results.map((item, index) => (
-                      <div key={index}>
-                        <div 
-                          className="flex items-center gap-3 hover:bg-gray-50 p-2 rounded-lg cursor-pointer"
-                          onClick={() => item.link_carioca_digital && window.open(item.link_carioca_digital, '_blank')}
-                        >
-                          <div className="flex-1">
-                            <h3 className="text-gray-900 font-medium mb-2">{item.titulo}</h3>
-                            <div className="flex items-center gap-2 text-xs text-[#008FBE] mb-2">
-                              {item.servico === true ? (
-                                <span className="font-bold">Serviço</span>
-                              ) : (
-                                <span className="font-bold">Informação</span>
-                              )}
-                              {/* <span className="text-gray-500">{'>'}</span>
-                              <span className="text-gray-500">lorem</span>
-                              <span className="text-gray-500">{'>'}</span>
-                              <span className="text-gray-500">ipsum</span> */}
+                    {results.map((item, index) => {
+                      const link = item.link_carioca_digital || item.link_acesso;
+                      return (
+                        <div key={index}>
+                          <div 
+                            className="flex items-center gap-3 hover:bg-gray-50 p-2 rounded-lg cursor-pointer"
+                            onClick={() => link && window.open(link, '_blank')}
+                          >
+                            <div className="flex-1">
+                              <h3 className="text-gray-900 font-medium mb-2">{item.titulo}</h3>
+                              <div className="flex items-center gap-2 text-xs text-[#008FBE] mb-2">
+                                {item.servico === true ? (
+                                  <span className="font-bold">Serviço</span>
+                                ) : (
+                                  <span className="font-bold">Informação</span>
+                                )}
+                                {/* <span className="text-gray-500">{'>'}</span>
+                                <span className="text-gray-500">lorem</span>
+                                <span className="text-gray-500">{'>'}</span>
+                                <span className="text-gray-500">ipsum</span> */}
+                              </div>
                             </div>
+                            {link && (
+                              <ExternalLinkIcon size={16} className="text-gray-400" />
+                            )}
                           </div>
-                          {item.link_carioca_digital && (
-                            <ExternalLinkIcon size={16} className="text-gray-400" />
-                          )}
+                          {index < results.length - 1 && <hr className="border-gray-200 my-2" />}
                         </div>
-                        {index < results.length - 1 && <hr className="border-gray-200 my-2" />}
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               ) : (
