@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { q } = req.query;
-  const token = process.env.NEXT_TYPESENSE_API_KEY;
+  const token = process.env.NEXT_PUBLIC_TYPESENSE_API_KEY;
   const headers = { Authorization: `Bearer ${token}` };
 
   try {
