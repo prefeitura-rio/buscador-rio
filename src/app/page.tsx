@@ -73,7 +73,7 @@ export default function Home() {
           <span className="text-gray-500 text-xs">
             Desenvolvido e mantido com ‪‪❤︎‬ por{' '}
             <Link
-              href="https://iplanrio.prefeitura.rio/"
+              href="https://www.iplan.rio/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-500 hover:underline"
