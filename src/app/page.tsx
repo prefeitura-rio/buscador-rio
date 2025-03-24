@@ -126,7 +126,7 @@ export default function Home() {
               )}
             </div>
 
-            {/* Resultados da Pesquisa ou Sugestões Populares */}
+            {/* Resultados da Pesquisa ou Sugestões Populares  */}
             <div className="p-4 max-h-[350px] overflow-y-auto mr-2">
               {loading ? (
                 <div>
