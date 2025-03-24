@@ -81,10 +81,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - buscador.rio
+        - buscador.dados.rio
       secretName: buscador-rio-prod-tls
   rules:
-    - host: buscador.rio
+    - host: buscador.dados.rio
       http:
         paths:
           - path: /

@@ -81,10 +81,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - staging.buscador.rio
+        - staging.buscador.dados.rio
       secretName: buscador-rio-staging-tls
   rules:
-    - host: staging.buscador.rio
+    - host: staging.buscador.dados.rio
       http:
         paths:
           - path: /
