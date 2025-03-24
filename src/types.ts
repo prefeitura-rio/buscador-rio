@@ -6,6 +6,7 @@ export type SearchResultItem = {
   servico: boolean;
   id?: string;
   id_carioca_digital?: number;
+  id_1746?: number;
   atividades_do_cidadao?: string;
   custo_do_servico?: string;
   disponivel_via_aplicativo?: boolean;
@@ -23,4 +24,9 @@ export type SearchResultItem = {
   ultima_atualizacao?: string;
   valor_a_ser_pago?: string;
   link_carioca_digital?: string;
+  category?: {
+    macro: string;
+    micro: string;
+    specific: string;
+  };
 };

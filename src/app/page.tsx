@@ -147,16 +147,19 @@ export default function Home() {
                           >
                             <div className="flex-1">
                               <h3 className="text-gray-900 font-medium mb-2">{item.titulo}</h3>
-                              <div className="flex items-center gap-2 text-xs text-[#008FBE] mb-2">
+                              <div className="flex flex-wrap items-center gap-2 text-xs text-[#008FBE] mb-2">
                                 {item.servico === true ? (
                                   <span className="font-bold">Serviço</span>
                                 ) : (
                                   <span className="font-bold">Informação</span>
                                 )}
-                                {/* <span className="text-gray-500">{'>'}</span>
-                                <span className="text-gray-500">lorem</span>
                                 <span className="text-gray-500">{'>'}</span>
-                                <span className="text-gray-500">ipsum</span> */}
+                                <span className="text-gray-500">{item.category?.macro}</span>
+                                <span className="text-gray-500">{'>'}</span>
+                                <span className="text-gray-500">{item.category?.micro}</span>
+                                <span className="text-gray-500">{'>'}</span>
+                                <span className="text-gray-500">{item.category?.specific}</span>
+                                <span className="bg-gray-200 rounded-xl text-xs text-gray-500 px-2 py-0.5">{item.id_1746 ? "1746" : item.id_carioca_digital ? "carioca digital" : "Acessar serviço"}</span>
                               </div>
                             </div>
                             {link && (

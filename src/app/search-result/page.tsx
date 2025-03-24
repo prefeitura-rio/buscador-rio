@@ -67,16 +67,21 @@ function SearchResultContent() {
                   <div className="flex items-start gap-4">
                     <div className="flex-1">
                       <h3 className="text-gray-900 font-medium mb-2">{item.titulo}</h3>
-                      <div className="flex items-center gap-2 text-xs text-[#008FBE] mb-2">
+                      <div className="flex flex-wrap items-center gap-2 text-xs text-[#008FBE] mb-2">
                         {item.servico === true ? (
-                        <span className="font-bold">Serviço</span>
+                          <span className="font-bold whitespace-nowrap">Serviço</span>
                         ) : (
-                          <span className="font-bold">Informação</span>
+                          <span className="font-bold whitespace-nowrap">Informação</span>
                         )}
-                        {/* <span className="text-gray-500">{'>'}</span>
-                        <span className="text-gray-500">lorem</span>
-                        <span className="text-gray-500">{'>'}</span>
-                        <span className="text-gray-500">ipsum</span> */}
+                        <span className="text-gray-500 whitespace-nowrap">{'>'}</span>
+                        <span className="text-gray-500 whitespace-nowrap">{item.category?.macro}</span>
+                        <span className="text-gray-500 whitespace-nowrap">{'>'}</span>
+                        <span className="text-gray-500 whitespace-nowrap">{item.category?.micro}</span>
+                        <span className="text-gray-500 whitespace-nowrap">{'>'}</span>
+                        <span className="text-gray-nowrap text-gray-500">{item.category?.specific}</span>
+                        <span className="bg-gray-200 rounded-xl text-xs text-gray-500 px-2 py-0.5 whitespace-nowrap">
+                          {item.id_1746 ? "1746" : item.id_carioca_digital ? "carioca digital" : "Acessar serviço"}
+                        </span>
                       </div>
                     { item.descricao && <hr className="border-gray-200 my-4" />}
                       <p className="text-gray-600 text-sm">{item.descricao}</p>
