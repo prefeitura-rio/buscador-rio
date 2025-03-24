@@ -84,7 +84,7 @@ function SearchResultContent() {
                         </span>
                       </div>
                     { item.descricao && <hr className="border-gray-200 my-4" />}
-                      <p className="text-gray-600 text-sm">{item.descricao}</p>
+                      <p className="text-gray-600 text-sm line-clamp-3">{item.descricao}</p>
                     </div>
                   </div>
                 </div>
