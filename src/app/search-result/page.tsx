@@ -7,6 +7,7 @@ import SearchResultSkeleton from '../components/SearchResultSkeleton'
 import { useRouter } from 'next/navigation'
 import { SearchResultItem } from '@/types'
 import { Facebook, Instagram, Twitter, Youtube } from 'lucide-react'
+import { displayTipo } from '@/utils/tipos'
 
 
 function SearchResultContent() {
@@ -68,11 +69,7 @@ function SearchResultContent() {
                     <div className="flex-1">
                       <h3 className="text-gray-900 font-medium mb-2">{item.titulo}</h3>
                       <div className="flex flex-wrap items-center gap-2 text-xs text-[#008FBE] mb-2">
-                        {item.servico === true ? (
-                          <span className="font-bold whitespace-nowrap">Serviço</span>
-                        ) : (
-                          <span className="font-bold whitespace-nowrap">Informação</span>
-                        )}
+                        <span className="font-bold">{displayTipo(item.tipo)}</span>
                         <span className="text-gray-500 whitespace-nowrap">{'>'}</span>
                         <span className="text-gray-500 whitespace-nowrap">{item.category?.macro}</span>
                         <span className="text-gray-500 whitespace-nowrap">{'>'}</span>
@@ -80,7 +77,7 @@ function SearchResultContent() {
                         <span className="text-gray-500 whitespace-nowrap">{'>'}</span>
                         <span className="text-gray-nowrap text-gray-500">{item.category?.specific}</span>
                         <span className="bg-gray-200 rounded-xl text-xs text-gray-500 px-2 py-0.5 whitespace-nowrap">
-                          {item.id_1746 ? "1746" : item.id_carioca_digital ? "carioca digital" : "Acessar serviço"}
+                          {item.id_1746 ? "1746" : item.id_carioca_digital ? "carioca digital" : "prefeitura rio"}
                         </span>
                       </div>
                     { item.descricao && <hr className="border-gray-200 my-4" />}

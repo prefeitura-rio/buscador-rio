@@ -9,6 +9,7 @@ import { SearchResultItem } from '@/types';
 import { popularSearches } from '@/utils/popularSearchs';
 import SearchResultSkeleton from '@/app/components/SearchResultSkeletonHome';
 import Link from 'next/link';
+import { displayTipo } from '@/utils/tipos';
 
 
 export default function Home() {
@@ -148,18 +149,14 @@ export default function Home() {
                             <div className="flex-1">
                               <h3 className="text-gray-900 font-medium mb-2">{item.titulo}</h3>
                               <div className="flex flex-wrap items-center gap-2 text-xs text-[#008FBE] mb-2">
-                                {item.servico === true ? (
-                                  <span className="font-bold">Serviço</span>
-                                ) : (
-                                  <span className="font-bold">Informação</span>
-                                )}
+                                <span className="font-bold">{displayTipo(item.tipo)}</span>
                                 <span className="text-gray-500">{'>'}</span>
                                 <span className="text-gray-500">{item.category?.macro}</span>
                                 <span className="text-gray-500">{'>'}</span>
                                 <span className="text-gray-500">{item.category?.micro}</span>
                                 <span className="text-gray-500">{'>'}</span>
                                 <span className="text-gray-500">{item.category?.specific}</span>
-                                <span className="bg-gray-200 rounded-xl text-xs text-gray-500 px-2 py-0.5">{item.id_1746 ? "1746" : item.id_carioca_digital ? "carioca digital" : "Acessar serviço"}</span>
+                                <span className="bg-gray-200 rounded-xl text-xs text-gray-500 px-2 py-0.5">{item.id_1746 ? "1746" : item.id_carioca_digital ? "carioca digital" : "prefeitura rio"}</span>
                               </div>
                             </div>
                             {link && (

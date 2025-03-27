@@ -22,6 +22,7 @@ export type SearchResultItem = {
   servico_em_manutencao?: boolean;
   tempo_para_atendimento?: string;
   ultima_atualizacao?: string;
+  tipo?: string;
   valor_a_ser_pago?: string;
   link_carioca_digital?: string;
   category?: {
