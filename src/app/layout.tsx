@@ -19,7 +19,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${dmSans.variable} font-sans antialiased relative bg-[#F8F8F8] bg-[url('/background-pattern.svg')] bg-center bg-[length:100%_auto]`}>{children}</body>
+      <body
+        className={`${dmSans.variable} font-sans antialiased relative bg-[#F8F8F8] bg-[url('/background-pattern.svg')] bg-center bg-[length:100%_auto] bg-fixed bg-no-repeat`}
+      >
+        {children}
+      </body>
     </html>
   );
 }
