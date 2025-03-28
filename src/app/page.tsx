@@ -59,6 +59,9 @@ export default function Home() {
     }
   };
 
+  // Filter results to exclude items with tipo 'noticia'
+  const filteredResults = results.filter(item => item.tipo !== 'noticia');
+
   return (
     <div 
       className="flex flex-col items-center justify-center min-h-screen"
@@ -138,7 +141,7 @@ export default function Home() {
                 <div>
                   <h2 className="text-sm font-semibold text-gray-500 mb-4 pl-2">RESULTADOS DA PESQUISA</h2>
                   <div className="space-y-3">
-                    {results.map((item, index) => {
+                    {filteredResults.map((item, index) => {
                       const link = item.link_carioca_digital || item.link_acesso;
                       return (
                         <div key={index}>
@@ -163,7 +166,7 @@ export default function Home() {
                               <ExternalLinkIcon size={16} className="text-gray-400" />
                             )}
                           </div>
-                          {index < results.length - 1 && <hr className="border-gray-200 my-2" />}
+                          {index < filteredResults.length - 1 && <hr className="border-gray-200 my-2" />}
                         </div>
                       );
                     })}
