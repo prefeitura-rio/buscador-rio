@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation'
 import { SearchResultItem } from '@/types'
 import { Facebook, Instagram, Twitter, Youtube } from 'lucide-react'
 import { displayTipo } from '@/utils/tipos'
+import { Switch } from '@/components/ui/switch'
 
 
 function SearchResultContent() {
@@ -15,6 +16,7 @@ function SearchResultContent() {
   const query = searchParams?.get('q') || ''
   const [results, setResults] = useState<SearchResultItem[]>([])
   const [loading, setLoading] = useState(true)
+  const [showNoticias, setShowNoticias] = useState(false)
 
 
   useEffect(() => {
@@ -37,14 +39,26 @@ function SearchResultContent() {
     fetchResults()
   }, [query])
 
+  const filteredResults = showNoticias ? results : results.filter(item => item.tipo !== 'noticia')
+
   return (
     <div className="max-w-[800px] mx-auto px-4 py-8">
-      {/* Search Bar */}
-      <SearchBar defaultValue={query} className="mb-6" />
+      {/* Search Bar and Switch */}
+      <div className="flex flex-col mb-6">
+        <SearchBar defaultValue={query} className="mb-3" />
+        <div className="flex justify-end items-center gap-2">
+          <Switch 
+            className="hover:cursor-pointer"
+            checked={showNoticias}
+            onCheckedChange={setShowNoticias}
+          />
+          <span className="text-sm text-gray-500">Mostrar notícias relacionadas</span>
+        </div>
+      </div>
 
       {/* Results Count */}
       <div className="text-sm text-gray-500 mb-4">
-        {results.length} Resultados
+        {filteredResults.length} Resultados
       </div>
 
       {/* Results */}
@@ -52,9 +66,9 @@ function SearchResultContent() {
         <SearchResultSkeleton />
       ) : (
         <>
-          {results.length > 0 ? (
+          {filteredResults.length > 0 ? (
             <div className="space-y-4">
-              {results.map((item, index) => (
+              {filteredResults.map((item, index) => (
                 <div
                   key={index}
                   className={`bg-white rounded-lg shadow-sm p-6 hover:bg-gray-50 ${(item.link_carioca_digital || item.link_acesso) ? 'cursor-pointer' : 'cursor-default'}`}
