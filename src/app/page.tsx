@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ArrowRightIcon, TrendingUp, ExternalLinkIcon, X } from 'lucide-react';
 // import { ArrowRightIcon, Plus, Image as ImageIcon, Mic } from 'lucide-react';
 import Image from 'next/image';
@@ -10,6 +10,8 @@ import { popularSearches } from '@/utils/popularSearchs';
 import SearchResultSkeleton from '@/app/components/SearchResultSkeletonHome';
 import Link from 'next/link';
 import { displayTipo } from '@/utils/tipos';
+import { setCookie, parseCookies } from 'nookies';
+import { v4 as uuidv4 } from 'uuid';
 
 
 export default function Home() {
@@ -18,6 +20,21 @@ export default function Home() {
   const [results, setResults] = useState<SearchResultItem[]>([]);
   const [loading, setLoading] = useState(false);
   const router = useRouter()
+
+  useEffect(() => {
+    const cookies = parseCookies();
+    if (!cookies.session_id) {
+      const newSessionId = generateSessionId();
+      setCookie(null, 'session_id', newSessionId, {
+        maxAge: 30 * 24 * 60 * 60, // 30 days
+        path: '/',
+      });
+    }
+  }, []);
+
+  const generateSessionId = () => {
+    return uuidv4();
+  };
 
   const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const newQuery = e.target.value;
@@ -47,8 +64,20 @@ export default function Home() {
     setResults([]);
   };
 
-  const handleSubmitSearch = () => {
+  const handleSubmitSearch = async () => {
     if (query.trim()) {
+      const cookies = parseCookies();
+      const session_id = cookies.session_id;
+
+      // Call the /metrics/busca endpoint
+      await fetch('/api/metrics/busca', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ session_id, query }),
+      });
+
       router.push(`/search-result?q=${encodeURIComponent(query.trim())}`);
     }
   };

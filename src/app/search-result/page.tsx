@@ -10,6 +10,7 @@ import { Facebook, Instagram, Twitter, Youtube } from 'lucide-react'
 import { displayTipo } from '@/utils/tipos'
 import { Switch } from '@/components/ui/switch'
 import { sendGAEvent } from '@next/third-parties/google'
+import { parseCookies } from 'nookies'
 
 
 function SearchResultContent() {
@@ -47,6 +48,30 @@ function SearchResultContent() {
     sendGAEvent('event', 'toggle de notícias selecionado', { value: checked ? 'Notícias on' : 'Notícias off' });
   };
 
+  const handleItemClick = async (item: SearchResultItem, index: number) => {
+    const cookies = parseCookies();
+    const session_id = cookies.session_id;
+    const link = item.link_carioca_digital || item.link_acesso;
+
+    // Call the /metrics/clique endpoint
+    await fetch('/api/metrics/clique', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        session_id,
+        query,
+        posicao: index,
+        objeto_clicado: item,
+      }),
+    });
+
+    if (link) {
+      window.open(link, '_blank');
+    }
+  };
+
   return (
     <div className="max-w-[800px] mx-auto px-4 py-8">
       {/* Search Bar and Switch */}
@@ -78,12 +103,7 @@ function SearchResultContent() {
                 <div
                   key={index}
                   className={`bg-white rounded-lg shadow-sm p-6 hover:bg-gray-50 ${(item.link_carioca_digital || item.link_acesso) ? 'cursor-pointer' : 'cursor-default'}`}
-                  onClick={() => {
-                    const link = item.link_carioca_digital || item.link_acesso;
-                    if (link) {
-                      window.open(link, '_blank');
-                    }
-                  }}
+                  onClick={() => handleItemClick(item, index)}
                 >
                   <div className="flex items-start gap-4">
                     <div className="flex-1">
