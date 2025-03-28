@@ -9,6 +9,7 @@ import { SearchResultItem } from '@/types'
 import { Facebook, Instagram, Twitter, Youtube } from 'lucide-react'
 import { displayTipo } from '@/utils/tipos'
 import { Switch } from '@/components/ui/switch'
+import { sendGAEvent } from '@next/third-parties/google'
 
 
 function SearchResultContent() {
@@ -41,6 +42,11 @@ function SearchResultContent() {
 
   const filteredResults = showNoticias ? results : results.filter(item => item.tipo !== 'noticia')
 
+  const handleCheckedChange = (checked: boolean) => {
+    setShowNoticias(checked);
+    sendGAEvent('event', 'toggle de notícias selecionado', { value: checked ? 'Notícias on' : 'Notícias off' });
+  };
+
   return (
     <div className="max-w-[800px] mx-auto px-4 py-8">
       {/* Search Bar and Switch */}
@@ -50,7 +56,7 @@ function SearchResultContent() {
           <Switch 
             className="hover:cursor-pointer"
             checked={showNoticias}
-            onCheckedChange={setShowNoticias}
+            onCheckedChange={handleCheckedChange}
           />
           <span className="text-sm text-gray-500">Mostrar notícias relacionadas</span>
         </div>
