@@ -10,7 +10,7 @@ import { Facebook, Instagram, Twitter, Youtube } from 'lucide-react'
 import { displayTipo } from '@/utils/tipos'
 import { Switch } from '@/components/ui/switch'
 import { sendGAEvent } from '@next/third-parties/google'
-import { parseCookies } from 'nookies'
+import { useSearchHandlers } from '@/hooks/useSearchHandlers';
 
 
 function SearchResultContent() {
@@ -19,7 +19,7 @@ function SearchResultContent() {
   const [results, setResults] = useState<SearchResultItem[]>([])
   const [loading, setLoading] = useState(true)
   const [showNoticias, setShowNoticias] = useState(false)
-
+  const { handleSubmitSearch, handleItemClick } = useSearchHandlers();
 
   useEffect(() => {
     const fetchResults = async () => {
@@ -48,38 +48,12 @@ function SearchResultContent() {
     sendGAEvent('event', 'toggle de notícias selecionado', { value: checked ? 'Notícias on' : 'Notícias off' });
   };
 
-  const handleItemClick = async (item: SearchResultItem, index: number) => {
-    const cookies = parseCookies();
-    const session_id = cookies.session_id;
-    const link = item.link_carioca_digital || item.link_acesso;
-    const portal_origem = ""
-    const tipo_dispositivo = ""
-
-    await fetch('/api/metrics/clique', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        session_id,
-        query,
-        posicao: index,
-        objeto_clicado: item,
-        portal_origem, 
-        tipo_dispositivo
-      }),
-    });
-
-    if (link) {
-      window.open(link, '_blank');
-    }
-  };
 
   return (
     <div className="max-w-[800px] mx-auto px-4 py-8">
       {/* Search Bar and Switch */}
       <div className="flex flex-col mb-6">
-        <SearchBar defaultValue={query} className="mb-3" />
+        <SearchBar defaultValue={query} onSearch={handleSubmitSearch} className="mb-3" />
         <div className="flex justify-end items-center gap-2">
           <Switch 
             className="hover:cursor-pointer"
@@ -106,7 +80,7 @@ function SearchResultContent() {
                 <div
                   key={index}
                   className={`bg-white rounded-lg shadow-sm p-6 hover:bg-gray-50 ${(item.link_carioca_digital || item.link_acesso) ? 'cursor-pointer' : 'cursor-default'}`}
-                  onClick={() => handleItemClick(item, index)}
+                  onClick={() => handleItemClick(item, index, query)}
                 >
                   <div className="flex items-start gap-4">
                     <div className="flex-1">

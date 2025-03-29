@@ -12,6 +12,7 @@ import Link from 'next/link';
 import { displayTipo } from '@/utils/tipos';
 import { setCookie, parseCookies } from 'nookies';
 import { v4 as uuidv4 } from 'uuid';
+import { useSearchHandlers } from '@/hooks/useSearchHandlers';
 
 
 export default function Home() {
@@ -20,6 +21,7 @@ export default function Home() {
   const [results, setResults] = useState<SearchResultItem[]>([]);
   const [loading, setLoading] = useState(false);
   const router = useRouter()
+  const { handleSubmitSearch, handleItemClick } = useSearchHandlers();
 
   useEffect(() => {
     const cookies = parseCookies();
@@ -64,59 +66,22 @@ export default function Home() {
     setResults([]);
   };
 
-  const handleSubmitSearch = async () => {
-    if (query.trim()) {
-      const cookies = parseCookies();
-      const session_id = cookies.session_id;
-      const portal_origem = "";
-      const tipo_dispositivo = "";
+  const handleSubmitSearchWrapper = () => {
+    handleSubmitSearch(query);
+  };
 
-      await fetch('/api/metrics/busca', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ session_id, query, portal_origem, tipo_dispositivo }),
-      });
-      router.push(`/search-result?q=${encodeURIComponent(query.trim())}`);
-    }
+  const handleItemClickWrapper = (item: SearchResultItem, index: number) => {
+    handleItemClick(item, index, query);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
-      handleSubmitSearch();
+      handleSubmitSearchWrapper();
     }
   };
 
   // Filter results to exclude items with tipo 'noticia'
   const filteredResults = results.filter(item => item.tipo !== 'noticia');
-
-  const handleItemClick = async (item: SearchResultItem, index: number) => {
-    const cookies = parseCookies();
-    const session_id = cookies.session_id;
-    const link = item.link_carioca_digital || item.link_acesso;
-    const portal_origem = ""
-    const tipo_dispositivo = ""
-
-    await fetch('/api/metrics/clique', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        session_id,
-        query,
-        posicao: index,
-        objeto_clicado: item,
-        portal_origem,
-        tipo_dispositivo
-      }),
-    });
-
-    if (link) {
-      window.open(link, '_blank');
-    }
-  };
 
   return (
     <div 
@@ -178,7 +143,7 @@ export default function Home() {
               )}
               {query && (
                 <button 
-                  onClick={handleSubmitSearch}
+                  onClick={handleSubmitSearchWrapper}
                   className="text-gray-400 hover:text-gray-600 cursor-pointer"
                 >
                   <ArrowRightIcon size={24} />
@@ -204,7 +169,7 @@ export default function Home() {
                           <div 
                             className="flex items-center gap-3 hover:bg-gray-50 p-2 rounded-lg cursor-pointer"
                             onClick={() => {
-                              handleItemClick(item, index);
+                              handleItemClickWrapper(item, index);
                             }}
                           >
                             <div className="flex-1">
