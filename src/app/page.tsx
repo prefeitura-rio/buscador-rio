@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ArrowRightIcon, TrendingUp, ExternalLinkIcon, X } from 'lucide-react';
 // import { ArrowRightIcon, Plus, Image as ImageIcon, Mic } from 'lucide-react';
 import Image from 'next/image';
@@ -10,6 +10,10 @@ import { popularSearches } from '@/utils/popularSearchs';
 import SearchResultSkeleton from '@/app/components/SearchResultSkeletonHome';
 import Link from 'next/link';
 import { displayTipo } from '@/utils/tipos';
+import { setCookie, parseCookies } from 'nookies';
+import { v4 as uuidv4 } from 'uuid';
+import { useSearchHandlers } from '@/hooks/useSearchHandlers';
+import { sendGAEvent } from '@next/third-parties/google'
 
 
 export default function Home() {
@@ -18,6 +22,22 @@ export default function Home() {
   const [results, setResults] = useState<SearchResultItem[]>([]);
   const [loading, setLoading] = useState(false);
   const router = useRouter()
+  const { handleSubmitSearch, handleItemClick } = useSearchHandlers();
+
+  useEffect(() => {
+    const cookies = parseCookies();
+    if (!cookies.session_id) {
+      const newSessionId = generateSessionId();
+      setCookie(null, 'session_id', newSessionId, {
+        maxAge: 30 * 24 * 60 * 60, // 30 dias
+        path: '/',
+      });
+    }
+  }, []);
+
+  const generateSessionId = () => {
+    return uuidv4();
+  };
 
   const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const newQuery = e.target.value;
@@ -47,15 +67,18 @@ export default function Home() {
     setResults([]);
   };
 
-  const handleSubmitSearch = () => {
-    if (query.trim()) {
-      router.push(`/search-result?q=${encodeURIComponent(query.trim())}`);
-    }
+  const handleSubmitSearchWrapper = () => {
+    handleSubmitSearch(query);
+  };
+
+  const handleItemClickWrapper = (item: SearchResultItem, index: number) => {
+    handleItemClick(item, index, query);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
-      handleSubmitSearch();
+      sendGAEvent('event', 'apertou enter para pesquisar na home');
+      handleSubmitSearchWrapper();
     }
   };
 
@@ -81,6 +104,7 @@ export default function Home() {
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-500 hover:underline"
+              onClick={() => sendGAEvent('event', 'click no hiperlink da iplan na home')}
             >
               IplanRio
             </Link>
@@ -122,7 +146,10 @@ export default function Home() {
               )}
               {query && (
                 <button 
-                  onClick={handleSubmitSearch}
+                  onClick={() => {
+                    sendGAEvent('event', 'clicou no botão de pesquisar no searchbar da home');
+                    handleSubmitSearchWrapper();
+                  }}
                   className="text-gray-400 hover:text-gray-600 cursor-pointer"
                 >
                   <ArrowRightIcon size={24} />
@@ -147,7 +174,9 @@ export default function Home() {
                         <div key={index}>
                           <div 
                             className="flex items-center gap-3 hover:bg-gray-50 p-2 rounded-lg cursor-pointer"
-                            onClick={() => link && window.open(link, '_blank')}
+                            onClick={() => {
+                              handleItemClickWrapper(item, index);
+                            }}
                           >
                             <div className="flex-1">
                               <h3 className="text-gray-900 font-medium mb-2">{item.titulo}</h3>

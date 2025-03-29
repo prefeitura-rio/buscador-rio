@@ -2,6 +2,7 @@
 import { Search, X } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { sendGAEvent } from '@next/third-parties/google'
 
 interface SearchBarProps {
   defaultValue?: string
@@ -31,7 +32,8 @@ export default function SearchBar({ defaultValue = '', onSearch, className = '' 
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
-      handleSubmitSearch()
+      handleSubmitSearch();
+      sendGAEvent('event', 'apertou enter para pesquisar na tela de resultado de busca');
     }
   }
 
@@ -60,7 +62,10 @@ export default function SearchBar({ defaultValue = '', onSearch, className = '' 
         )}
         {query && (
         <button
-          onClick={handleSubmitSearch}
+          onClick={() => {
+            sendGAEvent('event', 'clicou no botão de pesquisar no searchbar da tela de resultado de busca');
+            handleSubmitSearch();
+          }}
           className="text-gray-400 hover:text-gray-600 cursor-pointer"
         >
             <Search size={20} />

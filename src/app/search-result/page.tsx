@@ -6,9 +6,12 @@ import SearchBar from '../components/SearchBar'
 import SearchResultSkeleton from '../components/SearchResultSkeleton'
 import { useRouter } from 'next/navigation'
 import { SearchResultItem } from '@/types'
-import { Facebook, Instagram, Twitter, Youtube } from 'lucide-react'
+import { Facebook, Instagram, Youtube } from 'lucide-react'
+import { FaXTwitter } from "react-icons/fa6";
 import { displayTipo } from '@/utils/tipos'
 import { Switch } from '@/components/ui/switch'
+import { sendGAEvent } from '@next/third-parties/google'
+import { useSearchHandlers } from '@/hooks/useSearchHandlers';
 
 
 function SearchResultContent() {
@@ -17,7 +20,7 @@ function SearchResultContent() {
   const [results, setResults] = useState<SearchResultItem[]>([])
   const [loading, setLoading] = useState(true)
   const [showNoticias, setShowNoticias] = useState(false)
-
+  const { handleSubmitSearch, handleItemClick } = useSearchHandlers();
 
   useEffect(() => {
     const fetchResults = async () => {
@@ -41,16 +44,22 @@ function SearchResultContent() {
 
   const filteredResults = showNoticias ? results : results.filter(item => item.tipo !== 'noticia')
 
+  const handleCheckedChange = (checked: boolean) => {
+    setShowNoticias(checked);
+    sendGAEvent('event', 'toggle de notícias selecionado', { value: checked ? 'Notícias on' : 'Notícias off' });
+  };
+
+
   return (
     <div className="max-w-[800px] mx-auto px-4 py-8">
       {/* Search Bar and Switch */}
       <div className="flex flex-col mb-6">
-        <SearchBar defaultValue={query} className="mb-3" />
+        <SearchBar defaultValue={query} onSearch={handleSubmitSearch} className="mb-3" />
         <div className="flex justify-end items-center gap-2">
           <Switch 
             className="hover:cursor-pointer"
             checked={showNoticias}
-            onCheckedChange={setShowNoticias}
+            onCheckedChange={handleCheckedChange}
           />
           <span className="text-sm text-gray-500">Mostrar notícias relacionadas</span>
         </div>
@@ -72,12 +81,7 @@ function SearchResultContent() {
                 <div
                   key={index}
                   className={`bg-white rounded-lg shadow-sm p-6 hover:bg-gray-50 ${(item.link_carioca_digital || item.link_acesso) ? 'cursor-pointer' : 'cursor-default'}`}
-                  onClick={() => {
-                    const link = item.link_carioca_digital || item.link_acesso;
-                    if (link) {
-                      window.open(link, '_blank');
-                    }
-                  }}
+                  onClick={() => handleItemClick(item, index, query)}
                 >
                   <div className="flex items-start gap-4">
                     <div className="flex-1">
@@ -134,25 +138,25 @@ export default function SearchResult() {
                 className="text-white hover:text-gray-600 cursor-pointer"
                 onClick={() => window.open('https://www.instagram.com/prefeitura_rio/', '_blank')}
               >
-                <Instagram size={20} />
+                <Instagram size={18} />
               </button>
               <button
                 className="text-white hover:text-gray-600 cursor-pointer"
                 onClick={() => window.open('https://x.com/Prefeitura_Rio', '_blank')}
               >
-                <Twitter size={20} />
+                <FaXTwitter size={18} />
               </button>
               <button
                 className="text-white hover:text-gray-600 cursor-pointer"
                 onClick={() => window.open('https://www.facebook.com/PrefeituradoRio/', '_blank')}
               >
-                <Facebook size={20} />
+                <Facebook size={18} />
               </button>
               <button
                 className="text-white hover:text-gray-600 cursor-pointer"
                 onClick={() => window.open('https://www.youtube.com/prefeiturario', '_blank')}
               >
-                <Youtube size={20} />
+                <Youtube size={18} />
               </button>
             </div>
         </div>
