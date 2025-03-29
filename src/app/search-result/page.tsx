@@ -6,7 +6,8 @@ import SearchBar from '../components/SearchBar'
 import SearchResultSkeleton from '../components/SearchResultSkeleton'
 import { useRouter } from 'next/navigation'
 import { SearchResultItem } from '@/types'
-import { Facebook, Instagram, Twitter, Youtube } from 'lucide-react'
+import { Facebook, Instagram, Youtube } from 'lucide-react'
+import { FaXTwitter } from "react-icons/fa6";
 import { displayTipo } from '@/utils/tipos'
 import { Switch } from '@/components/ui/switch'
 import { sendGAEvent } from '@next/third-parties/google'
@@ -137,25 +138,25 @@ export default function SearchResult() {
                 className="text-white hover:text-gray-600 cursor-pointer"
                 onClick={() => window.open('https://www.instagram.com/prefeitura_rio/', '_blank')}
               >
-                <Instagram size={20} />
+                <Instagram size={18} />
               </button>
               <button
                 className="text-white hover:text-gray-600 cursor-pointer"
                 onClick={() => window.open('https://x.com/Prefeitura_Rio', '_blank')}
               >
-                <Twitter size={20} />
+                <FaXTwitter size={18} />
               </button>
               <button
                 className="text-white hover:text-gray-600 cursor-pointer"
                 onClick={() => window.open('https://www.facebook.com/PrefeituradoRio/', '_blank')}
               >
-                <Facebook size={20} />
+                <Facebook size={18} />
               </button>
               <button
                 className="text-white hover:text-gray-600 cursor-pointer"
                 onClick={() => window.open('https://www.youtube.com/prefeiturario', '_blank')}
               >
-                <Youtube size={20} />
+                <Youtube size={18} />
               </button>
             </div>
         </div>
