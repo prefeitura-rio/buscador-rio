@@ -52,8 +52,9 @@ function SearchResultContent() {
     const cookies = parseCookies();
     const session_id = cookies.session_id;
     const link = item.link_carioca_digital || item.link_acesso;
+    const portal_origem = ""
+    const tipo_dispositivo = ""
 
-    // Call the /metrics/clique endpoint
     await fetch('/api/metrics/clique', {
       method: 'POST',
       headers: {
@@ -64,6 +65,8 @@ function SearchResultContent() {
         query,
         posicao: index,
         objeto_clicado: item,
+        portal_origem, 
+        tipo_dispositivo
       }),
     });
 

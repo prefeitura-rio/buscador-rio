@@ -26,7 +26,7 @@ export default function Home() {
     if (!cookies.session_id) {
       const newSessionId = generateSessionId();
       setCookie(null, 'session_id', newSessionId, {
-        maxAge: 30 * 24 * 60 * 60, // 30 days
+        maxAge: 30 * 24 * 60 * 60, // 30 dias
         path: '/',
       });
     }
@@ -68,16 +68,16 @@ export default function Home() {
     if (query.trim()) {
       const cookies = parseCookies();
       const session_id = cookies.session_id;
+      const portal_origem = "";
+      const tipo_dispositivo = "";
 
-      // Call the /metrics/busca endpoint
       await fetch('/api/metrics/busca', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ session_id, query }),
+        body: JSON.stringify({ session_id, query, portal_origem, tipo_dispositivo }),
       });
-
       router.push(`/search-result?q=${encodeURIComponent(query.trim())}`);
     }
   };
@@ -90,6 +90,33 @@ export default function Home() {
 
   // Filter results to exclude items with tipo 'noticia'
   const filteredResults = results.filter(item => item.tipo !== 'noticia');
+
+  const handleItemClick = async (item: SearchResultItem, index: number) => {
+    const cookies = parseCookies();
+    const session_id = cookies.session_id;
+    const link = item.link_carioca_digital || item.link_acesso;
+    const portal_origem = ""
+    const tipo_dispositivo = ""
+
+    await fetch('/api/metrics/clique', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        session_id,
+        query,
+        posicao: index,
+        objeto_clicado: item,
+        portal_origem,
+        tipo_dispositivo
+      }),
+    });
+
+    if (link) {
+      window.open(link, '_blank');
+    }
+  };
 
   return (
     <div 
@@ -176,7 +203,9 @@ export default function Home() {
                         <div key={index}>
                           <div 
                             className="flex items-center gap-3 hover:bg-gray-50 p-2 rounded-lg cursor-pointer"
-                            onClick={() => link && window.open(link, '_blank')}
+                            onClick={() => {
+                              handleItemClick(item, index);
+                            }}
                           >
                             <div className="flex-1">
                               <h3 className="text-gray-900 font-medium mb-2">{item.titulo}</h3>
