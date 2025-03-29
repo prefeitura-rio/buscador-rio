@@ -13,6 +13,7 @@ import { displayTipo } from '@/utils/tipos';
 import { setCookie, parseCookies } from 'nookies';
 import { v4 as uuidv4 } from 'uuid';
 import { useSearchHandlers } from '@/hooks/useSearchHandlers';
+import { sendGAEvent } from '@next/third-parties/google'
 
 
 export default function Home() {
@@ -76,6 +77,7 @@ export default function Home() {
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
+      sendGAEvent('event', 'apertou enter para pesquisar na home');
       handleSubmitSearchWrapper();
     }
   };
@@ -102,6 +104,7 @@ export default function Home() {
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-500 hover:underline"
+              onClick={() => sendGAEvent('event', 'click no hiperlink da iplan na home')}
             >
               IplanRio
             </Link>
@@ -143,7 +146,10 @@ export default function Home() {
               )}
               {query && (
                 <button 
-                  onClick={handleSubmitSearchWrapper}
+                  onClick={() => {
+                    sendGAEvent('event', 'clicou no botão de pesquisar no searchbar da home');
+                    handleSubmitSearchWrapper();
+                  }}
                   className="text-gray-400 hover:text-gray-600 cursor-pointer"
                 >
                   <ArrowRightIcon size={24} />
