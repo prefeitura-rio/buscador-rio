@@ -97,16 +97,16 @@ export default function Home() {
 
         {/* Logo IplanRio */}
         <div className="relative mt-auto flex items-center gap-2 justify-center mb-10">
-          <span className="text-gray-500 text-xs">
+          <span className="text-gray-500 text-xs flex items-center">
             Desenvolvido e mantido com ‪‪❤︎‬ por{' '}
             <Link
               href="https://www.iplan.rio/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-500 hover:underline"
+              className="text-blue-500 hover:underline flex items-center"
               onClick={() => sendGAEvent('event', 'click no hiperlink da iplan na home')}
             >
-              IplanRio
+              <Image src="/iplan-animated-logo.gif" alt="IplanRio" width={70} height={100} className="ml-0" />
             </Link>
           </span>
         </div>

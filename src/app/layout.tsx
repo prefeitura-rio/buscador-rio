@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { DM_Sans } from "next/font/google";
 import "./globals.css";
 import { GoogleAnalytics } from '@next/third-parties/google'
+import NetworkStatusProvider from "./components/NetworkStatusProvider";
+import { Toaster } from "@/components/ui/sonner";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -25,7 +27,10 @@ export default function RootLayout({
       <body
         className={`${dmSans.variable} font-sans antialiased relative bg-[#F8F8F8] bg-[url('/background-pattern.svg')] bg-center bg-[length:100%_auto] bg-fixed bg-no-repeat`}
       >
+        <NetworkStatusProvider>
         {children}
+        </NetworkStatusProvider>
+        <Toaster />
       </body>
     </html>
   );
