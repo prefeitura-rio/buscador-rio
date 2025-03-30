@@ -12,7 +12,7 @@ import { displayTipo } from '@/utils/tipos'
 import { Switch } from '@/components/ui/switch'
 import { sendGAEvent } from '@next/third-parties/google'
 import { useSearchHandlers } from '@/hooks/useSearchHandlers';
-
+import { toast } from 'sonner';
 
 function SearchResultContent() {
   const searchParams = useSearchParams()
@@ -28,11 +28,15 @@ function SearchResultContent() {
         setLoading(true)
         try {
           const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`)
+          if (!response.ok) {
+            throw new Error("Failed to fetch search results");
+          }
           const data = await response.json()
           setResults(data.result || [])
         } catch (error) {
           console.error('Error fetching search results:', error)
           setResults([])
+          toast.error(`Oops! Parece que algo saiu do esperado. Tente novamente em alguns instantes.`);
         } finally {
           setLoading(false)
         }

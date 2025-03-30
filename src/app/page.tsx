@@ -56,7 +56,7 @@ export default function Home() {
       } catch (error) {
         console.error("Error fetching search results:", error);
         setResults([]);
-        toast.error(`Estamos em manutenção. Tente novamente mais tarde.`);
+        toast.error(`Oops! Parece que algo saiu do esperado. Tente novamente em alguns instantes.`);
       } finally {
         setLoading(false);
       }
@@ -172,39 +172,43 @@ export default function Home() {
               ) : query.length > 2 ? (
                 <div>
                   <h2 className="text-sm font-semibold text-gray-500 mb-4 pl-2">RESULTADOS DA PESQUISA</h2>
-                  <div className="space-y-3">
-                    {filteredResults.map((item, index) => {
-                      const link = item.link_carioca_digital || item.link_acesso;
-                      return (
-                        <div key={index}>
-                          <div 
-                            className="flex items-center gap-3 hover:bg-gray-50 p-2 rounded-lg cursor-pointer"
-                            onClick={() => {
-                              handleItemClickWrapper(item, index);
-                            }}
-                          >
-                            <div className="flex-1">
-                              <h3 className="text-gray-900 font-medium mb-2">{item.titulo}</h3>
-                              <div className="flex flex-wrap items-center gap-2 text-xs text-[#008FBE] mb-2">
-                                <span className="font-bold">{displayTipo(item.tipo)}</span>
-                                <span className="text-gray-500">{'>'}</span>
-                                <span className="text-gray-500">{item.category?.macro}</span>
-                                <span className="text-gray-500">{'>'}</span>
-                                <span className="text-gray-500">{item.category?.micro}</span>
-                                <span className="text-gray-500">{'>'}</span>
-                                <span className="text-gray-500">{item.category?.specific}</span>
-                                <span className="bg-gray-200 rounded-xl text-xs text-gray-500 px-2 py-0.5">{item.id_1746 ? "1746" : item.id_carioca_digital ? "carioca digital" : "prefeitura rio"}</span>
+                  {filteredResults.length > 0 ? (
+                    <div className="space-y-3">
+                      {filteredResults.map((item, index) => {
+                        const link = item.link_carioca_digital || item.link_acesso;
+                        return (
+                          <div key={index}>
+                            <div 
+                              className="flex items-center gap-3 hover:bg-gray-50 p-2 rounded-lg cursor-pointer"
+                              onClick={() => {
+                                handleItemClickWrapper(item, index);
+                              }}
+                            >
+                              <div className="flex-1">
+                                <h3 className="text-gray-900 font-medium mb-2">{item.titulo}</h3>
+                                <div className="flex flex-wrap items-center gap-2 text-xs text-[#008FBE] mb-2">
+                                  <span className="font-bold">{displayTipo(item.tipo)}</span>
+                                  <span className="text-gray-500">{'>'}</span>
+                                  <span className="text-gray-500">{item.category?.macro}</span>
+                                  <span className="text-gray-500">{'>'}</span>
+                                  <span className="text-gray-500">{item.category?.micro}</span>
+                                  <span className="text-gray-500">{'>'}</span>
+                                  <span className="text-gray-500">{item.category?.specific}</span>
+                                  <span className="bg-gray-200 rounded-xl text-xs text-gray-500 px-2 py-0.5">{item.id_1746 ? "1746" : item.id_carioca_digital ? "carioca digital" : "prefeitura rio"}</span>
+                                </div>
                               </div>
+                              {link && (
+                                <ExternalLinkIcon size={16} className="text-gray-400" />
+                              )}
                             </div>
-                            {link && (
-                              <ExternalLinkIcon size={16} className="text-gray-400" />
-                            )}
+                            {index < filteredResults.length - 1 && <hr className="border-gray-200 my-2" />}
                           </div>
-                          {index < filteredResults.length - 1 && <hr className="border-gray-200 my-2" />}
-                        </div>
-                      );
-                    })}
-                  </div>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <div className="text-gray-500 text-center mt-4">Nenhum resultado encontrado</div>
+                  )}
                 </div>
               ) : (
                 <div>
