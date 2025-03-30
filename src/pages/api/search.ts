@@ -7,7 +7,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     const response = await fetch(
-      `https://busca.dados.rio/search/multi?q=${q}&cs=carioca-digital-gemini,1746-gemini,pref-rio`,
+      `https://busca.dados.rio/search/multsi?q=${q}&cs=carioca-digital-gemini,1746-gemini,pref-rio`,
       {
         headers,
       }

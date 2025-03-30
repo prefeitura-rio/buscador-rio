@@ -14,6 +14,7 @@ import { setCookie, parseCookies } from 'nookies';
 import { v4 as uuidv4 } from 'uuid';
 import { useSearchHandlers } from '@/hooks/useSearchHandlers';
 import { sendGAEvent } from '@next/third-parties/google'
+import { toast } from 'sonner';
 
 
 export default function Home() {
@@ -47,11 +48,15 @@ export default function Home() {
       setLoading(true);
       try {
         const response = await fetch(`/api/search?q=${newQuery}`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch search results");
+        }
         const data = await response.json();
         setResults(data.result || []);
       } catch (error) {
-        console.error('Error fetching search results:', error);
+        console.error("Error fetching search results:", error);
         setResults([]);
+        toast.error(`Estamos em manutenção. Tente novamente mais tarde.`);
       } finally {
         setLoading(false);
       }
