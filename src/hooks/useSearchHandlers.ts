@@ -58,7 +58,8 @@ export const useSearchHandlers = () => {
   const handleItemClick = async (
     item: SearchResultItem,
     index: number,
-    query: string
+    query: string,
+    noticias_toggled: boolean
   ) => {
     const cookies = parseCookies();
     const session_id = cookies.session_id;
@@ -78,6 +79,7 @@ export const useSearchHandlers = () => {
         objeto_clicado: item,
         portal_origem,
         tipo_dispositivo,
+        noticias_toggled,
       }),
     });
 

@@ -1,7 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { session_id, query, portal_origem,tipo_dispositivo, posicao, objeto_clicado } = req.body;
+  const {
+    session_id,
+    query,
+    portal_origem,
+    tipo_dispositivo,
+    posicao,
+    objeto_clicado,
+    noticias_toggled,
+  } = req.body;
   const token = process.env.TYPESENSE_API_TOKEN;
   const headers = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' };
 
@@ -16,6 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         tipo_dispositivo,
         posicao,
         objeto_clicado,
+        noticias_toggled,
       }),
     });
 
