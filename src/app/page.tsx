@@ -19,6 +19,7 @@ import { toast } from 'sonner';
 
 export default function Home() {
   const [query, setQuery] = useState('');
+  const noticias_toggled = false; 
   const [isFocused, setIsFocused] = useState(false);
   const [results, setResults] = useState<SearchResultItem[]>([]);
   const [loading, setLoading] = useState(false);
@@ -77,7 +78,7 @@ export default function Home() {
   };
 
   const handleItemClickWrapper = (item: SearchResultItem, index: number) => {
-    handleItemClick(item, index, query);
+    handleItemClick(item, index, query, noticias_toggled);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
