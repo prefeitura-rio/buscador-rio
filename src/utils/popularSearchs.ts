@@ -1,5 +1,7 @@
 export const popularSearches = [
-  { icon: "trend", text: "Quero pagar o meu IPTU" },
-  { icon: "trend", text: "Como mudar de titular na conta de luz?" },
-  { icon: "trend", text: "Minha rua está sem luz" },
+  { icon: "trend", text: "Pagamento de IPTU" },
+  { icon: "trend", text: "Agendamento no CadÚnico" },
+  { icon: "trend", text: "Estacionamento irregular" },
+  { icon: "trend", text: "Alvará" },
+  // { icon: "trend", text: "Reparo de buraco" },
 ];
