@@ -6,7 +6,8 @@ steps:
       - "-c"
       - |
         echo "TYPESENSE_API_TOKEN=${_TYPESENSE_API_TOKEN}" > .env.production && \
-        echo "GOOGLE_ANALYTICS_ID=G-ZCSXPVQRL3" >> .env.production
+        echo "GOOGLE_ANALYTICS_ID=G-ZCSXPVQRL3" >> .env.production && \
+        echo "API_ROOT_URL=https://busca.dados.rio" >> .env.production 
   # Build the container image
   - name: "gcr.io/cloud-builders/docker"
     args: ["build", "-t", "gcr.io/$PROJECT_ID/buscador-rio:$COMMIT_SHA", "."]

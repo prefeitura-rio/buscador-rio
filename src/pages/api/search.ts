@@ -4,10 +4,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const { q } = req.query;
   const token = process.env.TYPESENSE_API_TOKEN;
   const headers = { Authorization: `Bearer ${token}` };
-
+const rootUrl = process.env.API_ROOT_URL;
   try {
     const response = await fetch(
-      `https://busca.dados.rio/search/multi?q=${q}&cs=carioca-digital-gemini,1746-gemini,pref-rio`,
+      `${rootUrl}/search/multi?q=${q}&cs=carioca-digital,1746,pref-rio`,
       {
         headers,
       }
