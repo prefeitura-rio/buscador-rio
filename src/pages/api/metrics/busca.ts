@@ -4,12 +4,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const { session_id, query, portal_origem, tipo_dispositivo } = req.body;
   const token = process.env.TYPESENSE_API_TOKEN;
   const headers = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' };
-
+  const rootUrl = process.env.API_ROOT_URL;
+  
   try {
-    const response = await fetch("https://busca.dados.rio/metrics/busca", {
+    const response = await fetch(`${rootUrl}/metrics/busca`, {
       method: "POST",
       headers,
-      body: JSON.stringify({ session_id, query, portal_origem, tipo_dispositivo }),
+      body: JSON.stringify({
+        session_id,
+        query,
+        portal_origem,
+        tipo_dispositivo,
+      }),
     });
 
     if (!response.ok) {

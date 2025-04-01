@@ -12,9 +12,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   } = req.body;
   const token = process.env.TYPESENSE_API_TOKEN;
   const headers = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' };
-
+  const rootUrl = process.env.API_ROOT_URL;
   try {
-    const response = await fetch("https://busca.dados.rio/metrics/clique", {
+    const response = await fetch(`${rootUrl}/metrics/clique`, {
       method: "POST",
       headers,
       body: JSON.stringify({
