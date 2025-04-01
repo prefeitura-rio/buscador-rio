@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import useNetwork from '@/hooks/useNetwork';
 import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogTitle, AlertDialogDescription } from '@/components/ui/alert-dialog';
 import { toast } from 'sonner';
-import Image from 'next/image';
+// import Image from 'next/image';
 
 const NetworkStatusProvider = ({ children }: { children: React.ReactNode }) => {
   const isOnline = useNetwork();
@@ -34,7 +34,7 @@ const NetworkStatusProvider = ({ children }: { children: React.ReactNode }) => {
           <AlertDialogDescription>
             Você está offline. Por favor, verifique sua conexão com a internet.
           </AlertDialogDescription>
-          <div className="flex justify-center items-center pt-2">
+          {/* <div className="flex justify-center items-center pt-2">
             <Image
               src="/iplan-animated-logo.gif"
               width={100}  
@@ -42,7 +42,7 @@ const NetworkStatusProvider = ({ children }: { children: React.ReactNode }) => {
               alt=""
               unoptimized // Required for GIFs in Next.js Image component
             />
-          </div>
+          </div> */}
         </AlertDialogContent>
       </AlertDialog>
     </main>
