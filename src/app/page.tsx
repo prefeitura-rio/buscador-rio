@@ -176,7 +176,7 @@ export default function Home() {
                   {filteredResults.length > 0 ? (
                     <div className="space-y-3">
                       {filteredResults.map((item, index) => {
-                        const link = item.link_carioca_digital || item.link_acesso;
+                        const link = item.url;
                         return (
                           <div key={index}>
                             <div 

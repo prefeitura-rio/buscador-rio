@@ -63,7 +63,7 @@ export const useSearchHandlers = () => {
   ) => {
     const cookies = parseCookies();
     const session_id = cookies.session_id;
-    const link = item.link_carioca_digital || item.link_acesso;
+    const link = item.url;
     const portal_origem = getPortalOrigem();
     const tipo_dispositivo = getTipoDispositivo();
 

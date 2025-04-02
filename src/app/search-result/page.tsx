@@ -84,7 +84,7 @@ function SearchResultContent() {
               {filteredResults.map((item, index) => (
                 <div
                   key={index}
-                  className={`bg-white rounded-lg shadow-sm p-6 hover:bg-gray-50 ${(item.link_carioca_digital || item.link_acesso) ? 'cursor-pointer' : 'cursor-default'}`}
+                  className={`bg-white rounded-lg shadow-sm p-6 hover:bg-gray-50 ${(item.url) ? 'cursor-pointer' : 'cursor-default'}`}
                   onClick={() => handleItemClick(item, index, query, showNoticias)}
                 >
                   <div className="flex items-start gap-4">
