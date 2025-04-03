@@ -24,7 +24,7 @@ export default function Home() {
   const [results, setResults] = useState<SearchResultItem[]>([]);
   const [loading, setLoading] = useState(false);
   const router = useRouter()
-  const { handleSubmitSearch, handleItemClick } = useSearchHandlers();
+  const { handleSubmitSearch, handleItemClick, handleSearchApi } = useSearchHandlers();
 
   useEffect(() => {
     const cookies = parseCookies();
@@ -48,12 +48,8 @@ export default function Home() {
     if (newQuery.length > 2) {
       setLoading(true);
       try {
-        const response = await fetch(`/api/search?q=${newQuery}`);
-        if (!response.ok) {
-          throw new Error("Failed to fetch search results");
-        }
-        const data = await response.json();
-        setResults(data.result || []);
+        const results = await handleSearchApi(newQuery);
+        setResults(results);
       } catch (error) {
         console.error("Error fetching search results:", error);
         setResults([]);
@@ -112,7 +108,7 @@ export default function Home() {
               className="text-blue-500 hover:underline flex items-center"
               onClick={() => sendGAEvent('event', 'click no hiperlink da iplan na home')}
             >
-              <Image src="/iplan-animated-logo.gif" alt="IplanRio" width={70} height={100} className="ml-0" />
+              <Image src="/iplan-animated-logo.gif" alt="IplanRio" width={70} height={15} className="ml-0" />
             </Link>
           </span>
         </div>

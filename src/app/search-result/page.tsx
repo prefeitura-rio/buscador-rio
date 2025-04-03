@@ -13,6 +13,8 @@ import { Switch } from '@/components/ui/switch'
 import { sendGAEvent } from '@next/third-parties/google'
 import { useSearchHandlers } from '@/hooks/useSearchHandlers';
 import { toast } from 'sonner';
+import { useReCaptcha } from '@/hooks/useReCaptcha'
+
 
 function SearchResultContent() {
   const searchParams = useSearchParams()
@@ -21,30 +23,39 @@ function SearchResultContent() {
   const [loading, setLoading] = useState(true)
   const [showNoticias, setShowNoticias] = useState(false)
   const { handleSubmitSearch, handleItemClick } = useSearchHandlers();
+  const { getReCaptchaToken } = useReCaptcha();
 
   useEffect(() => {
     const fetchResults = async () => {
       if (query) {
-        setLoading(true)
+        setLoading(true);
+        // Get reCAPTCHA token
+        const recaptchaToken = await getReCaptchaToken();
         try {
-          const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`)
+          const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Recaptcha-Token': recaptchaToken || '',
+            },
+          });
           if (!response.ok) {
             throw new Error("Failed to fetch search results");
           }
-          const data = await response.json()
-          setResults(data.result || [])
+          const data = await response.json();
+          setResults(data.result || []);
         } catch (error) {
-          console.error('Error fetching search results:', error)
-          setResults([])
+          console.error('Error fetching search results:', error);
+          setResults([]);
           toast.error(`Oops! Parece que algo saiu do esperado. Tente novamente em alguns instantes.`);
         } finally {
-          setLoading(false)
+          setLoading(false);
         }
       }
-    }
+    };
 
-    fetchResults()
-  }, [query])
+    fetchResults();
+  }, [query, getReCaptchaToken]);
 
   const filteredResults = showNoticias ? results : results.filter(item => item.tipo !== 'noticia')
 
