@@ -28,7 +28,7 @@ export default async function handler(
   const rootUrl = process.env.API_ROOT_URL;
 
   try {
-    const response = await fetch(`${rootUrl}/metric/clique`, {
+    const response = await fetch(`${rootUrl}/metrics/clique`, {
       method: "POST",
       headers,
       body: JSON.stringify({

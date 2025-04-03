@@ -19,7 +19,7 @@ export default async function handler(
   const rootUrl = process.env.API_ROOT_URL;
 
   try {
-    const response = await fetch(`${rootUrl}/metric/busca`, {
+    const response = await fetch(`${rootUrl}/metrics/busca`, {
       method: "POST",
       headers,
       body: JSON.stringify({
