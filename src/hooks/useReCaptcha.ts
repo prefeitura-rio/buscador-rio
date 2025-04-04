@@ -20,5 +20,5 @@ export const useReCaptcha = () => {
     }
   }, [executeRecaptcha]);
 
-  return { getReCaptchaToken };
+  return { getReCaptchaToken, isReady: !!executeRecaptcha };
 };

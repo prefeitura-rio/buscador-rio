@@ -13,6 +13,7 @@ import { Switch } from '@/components/ui/switch'
 import { sendGAEvent } from '@next/third-parties/google'
 import { useSearchHandlers } from '@/hooks/useSearchHandlers';
 import { toast } from 'sonner';
+import { useReCaptcha } from '@/hooks/useReCaptcha'
 
 function SearchResultContent() {
   const searchParams = useSearchParams()
@@ -21,10 +22,11 @@ function SearchResultContent() {
   const [loading, setLoading] = useState(true)
   const [showNoticias, setShowNoticias] = useState(false)
   const { handleSubmitSearch, handleItemClick, handleSearchApi } = useSearchHandlers();
+  const { isReady } = useReCaptcha();
 
   useEffect(() => {
     const fetchResults = async () => {
-      if (query) {
+      if (query && isReady) {
         setLoading(true);
         try {
           const data = await handleSearchApi(query);
@@ -40,7 +42,7 @@ function SearchResultContent() {
     };
 
     fetchResults();
-  }, [query, handleSearchApi]);
+  }, [query, handleSearchApi, isReady]); 
 
   const filteredResults = showNoticias ? results : results.filter(item => item.tipo !== 'noticia')
 
@@ -65,15 +67,15 @@ function SearchResultContent() {
       </div>
 
       {/* Results Count */}
-      <div className="text-sm text-gray-500 mb-4">
-        {filteredResults.length} Resultados
-      </div>
 
       {/* Results */}
       {loading ? (
         <SearchResultSkeleton />
       ) : (
         <>
+      <div className="text-sm text-gray-500 mb-4">
+        {filteredResults.length} Resultados
+      </div>
           {filteredResults.length > 0 ? (
             <div className="space-y-4">
               {filteredResults.map((item, index) => (
