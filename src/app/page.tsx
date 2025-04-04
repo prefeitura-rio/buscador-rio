@@ -182,7 +182,10 @@ export default function Home() {
                               }}
                             >
                               <div className="flex-1">
-                                <h3 className="text-gray-900 font-medium mb-2">{item.titulo}</h3>
+                                <h3
+                                  className="text-gray-900 font-medium mb-2"
+                                  dangerouslySetInnerHTML={{ __html: item.titulo }}
+                                ></h3>
                                 <div className="flex flex-wrap items-center gap-2 text-xs text-[#008FBE] mb-2">
                                   <span className="font-bold">{displayTipo(item.tipo)}</span>
                                   <span className="text-gray-500">{'>'}</span>
