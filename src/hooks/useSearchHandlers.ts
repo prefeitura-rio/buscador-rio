@@ -2,6 +2,7 @@ import { useRouter } from "next/navigation";
 import { parseCookies } from "nookies";
 import { SearchResultItem } from "@/types";
 import { useReCaptcha } from "./useReCaptcha";
+import { useCallback } from "react";
 
 export const useSearchHandlers = () => {
   const router = useRouter();
@@ -115,36 +116,39 @@ export const useSearchHandlers = () => {
     }
   };
 
-  const handleSearchApi = async (
-    query: string
-  ): Promise<SearchResultItem[]> => {
-    if (!query.trim() || query.trim().length <= 2) {
-      return [];
-    }
-
-    const recaptchaToken = await getReCaptchaToken();
-
-    try {
-      const response = await fetch(
-        `/api/search?q=${encodeURIComponent(query)}`,
-        {
-          headers: {
-            ...(recaptchaToken ? { "X-Recaptcha-Token": recaptchaToken } : {}),
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch search results");
+  const handleSearchApi = useCallback(
+    async (query: string): Promise<SearchResultItem[]> => {
+      if (!query.trim() || query.trim().length <= 2) {
+        return [];
       }
 
-      const data = await response.json();
-      return data.result || [];
-    } catch (error) {
-      console.error("Error fetching search results:", error);
-      throw error;
-    }
-  };
+      const recaptchaToken = await getReCaptchaToken();
+
+      try {
+        const response = await fetch(
+          `/api/search?q=${encodeURIComponent(query)}`,
+          {
+            headers: {
+              ...(recaptchaToken
+                ? { "X-Recaptcha-Token": recaptchaToken }
+                : {}),
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch search results");
+        }
+
+        const data = await response.json();
+        return data.result || [];
+      } catch (error) {
+        console.error("Error fetching search results:", error);
+        throw error;
+      }
+    },
+    [getReCaptchaToken]
+  );
 
   return { handleSubmitSearch, handleItemClick, handleSearchApi };
 };

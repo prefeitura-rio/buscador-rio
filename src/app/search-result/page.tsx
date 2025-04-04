@@ -13,8 +13,6 @@ import { Switch } from '@/components/ui/switch'
 import { sendGAEvent } from '@next/third-parties/google'
 import { useSearchHandlers } from '@/hooks/useSearchHandlers';
 import { toast } from 'sonner';
-import { useReCaptcha } from '@/hooks/useReCaptcha'
-
 
 function SearchResultContent() {
   const searchParams = useSearchParams()
@@ -22,32 +20,19 @@ function SearchResultContent() {
   const [results, setResults] = useState<SearchResultItem[]>([])
   const [loading, setLoading] = useState(true)
   const [showNoticias, setShowNoticias] = useState(false)
-  const { handleSubmitSearch, handleItemClick } = useSearchHandlers();
-  const { getReCaptchaToken } = useReCaptcha();
+  const { handleSubmitSearch, handleItemClick, handleSearchApi } = useSearchHandlers();
 
   useEffect(() => {
     const fetchResults = async () => {
       if (query) {
         setLoading(true);
-        // Get reCAPTCHA token
-        const recaptchaToken = await getReCaptchaToken();
         try {
-          const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-              'X-Recaptcha-Token': recaptchaToken || '',
-            },
-          });
-          if (!response.ok) {
-            throw new Error("Failed to fetch search results");
-          }
-          const data = await response.json();
-          setResults(data.result || []);
+          const data = await handleSearchApi(query);
+          setResults(data);
         } catch (error) {
           console.error('Error fetching search results:', error);
           setResults([]);
-          toast.error(`Oops! Parece que algo saiu do esperado. Tente novamente em alguns instantes.`);
+          toast.error('Oops! Parece que algo saiu do esperado. Tente novamente em alguns instantes.');
         } finally {
           setLoading(false);
         }
@@ -55,7 +40,7 @@ function SearchResultContent() {
     };
 
     fetchResults();
-  }, [query, getReCaptchaToken]);
+  }, [query, handleSearchApi]);
 
   const filteredResults = showNoticias ? results : results.filter(item => item.tipo !== 'noticia')
 
@@ -64,14 +49,13 @@ function SearchResultContent() {
     sendGAEvent('event', 'toggle de notícias selecionado', { value: checked ? 'Notícias on' : 'Notícias off' });
   };
 
-
   return (
     <div className="max-w-[800px] mx-auto px-4 py-8">
       {/* Search Bar and Switch */}
       <div className="flex flex-col mb-6">
         <SearchBar defaultValue={query} onSearch={handleSubmitSearch} className="mb-3" />
         <div className="flex justify-end items-center gap-2">
-          <Switch 
+          <Switch
             className="hover:cursor-pointer"
             checked={showNoticias}
             onCheckedChange={handleCheckedChange}
@@ -113,7 +97,7 @@ function SearchResultContent() {
                           {item.id_1746 ? "1746" : item.id_carioca_digital ? "carioca digital" : "prefeitura rio"}
                         </span>
                       </div>
-                    { item.descricao && <hr className="border-gray-200 my-4" />}
+                      {item.descricao && <hr className="border-gray-200 my-4" />}
                       <p className="text-gray-600 text-sm line-clamp-3">{item.descricao}</p>
                     </div>
                   </div>
@@ -133,22 +117,22 @@ function SearchResultContent() {
 
 export default function SearchResult() {
   const router = useRouter()
-  
+
   return (
     <div className="min-h-screen">
       {/* Header */}
       <div className="bg-[#008FBE] py-4">
         <div className="flex justify-center">
           <div className="mx-4 md:mx-0 w-full max-w-[760px] flex justify-between">
-          <Image
-            onClick={() => router.push('/')} 
-            src="/logo_prefeitura.svg" 
-            alt="Prefeitura do Rio" 
-            width={80} 
-            height={100} 
-            className="brightness-0 invert cursor-pointer"
-          />
-          <div className="flex flex-row gap-6">
+            <Image
+              onClick={() => router.push('/')}
+              src="/logo_prefeitura.svg"
+              alt="Prefeitura do Rio"
+              width={80}
+              height={100}
+              className="brightness-0 invert cursor-pointer"
+            />
+            <div className="flex flex-row gap-6">
               <button
                 className="text-white hover:text-gray-600 cursor-pointer"
                 onClick={() => window.open('https://www.instagram.com/prefeitura_rio/', '_blank')}
@@ -174,7 +158,7 @@ export default function SearchResult() {
                 <Youtube size={18} />
               </button>
             </div>
-        </div>
+          </div>
         </div>
       </div>
 
