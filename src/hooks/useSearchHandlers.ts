@@ -111,9 +111,10 @@ export const useSearchHandlers = () => {
       console.error("Error logging click metrics:", error);
     }
 
-    if (link) {
-      window.open(link, "_blank");
-    }
+   if (link) {
+     window.location.href = link;
+   }
+
   };
 
   const handleSearchApi = useCallback(
