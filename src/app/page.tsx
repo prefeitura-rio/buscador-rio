@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { ArrowRightIcon, TrendingUp, ExternalLinkIcon, X } from 'lucide-react';
 // import { ArrowRightIcon, Plus, Image as ImageIcon, Mic } from 'lucide-react';
 import Image from 'next/image';
@@ -23,8 +23,10 @@ export default function Home() {
   const [isFocused, setIsFocused] = useState(false);
   const [results, setResults] = useState<SearchResultItem[]>([]);
   const [loading, setLoading] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
   const router = useRouter()
   const { handleSubmitSearch, handleItemClick, handleSearchApi } = useSearchHandlers();
+  const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const cookies = parseCookies();
@@ -41,24 +43,33 @@ export default function Home() {
     return uuidv4();
   };
 
-  const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newQuery = e.target.value;
     setQuery(newQuery);
 
+    if (debounceTimeout.current) {
+      clearTimeout(debounceTimeout.current);
+    }
+
     if (newQuery.length > 2) {
-      setLoading(true);
-      try {
-        const results = await handleSearchApi(newQuery);
-        setResults(results);
-      } catch (error) {
-        console.error("Error fetching search results:", error);
-        setResults([]);
-        toast.error(`Oops! Parece que algo saiu do esperado. Tente novamente em alguns instantes.`);
-      } finally {
-        setLoading(false);
-      }
+      setIsSearching(true);
+      debounceTimeout.current = setTimeout(async () => {
+        setLoading(true);
+        try {
+          const results = await handleSearchApi(newQuery);
+          setResults(results);
+        } catch (error) {
+          console.error("Error fetching search results:", error);
+          setResults([]);
+          toast.error(`Oops! Parece que algo saiu do esperado. Tente novamente em alguns instantes.`);
+        } finally {
+          setLoading(false);
+          setIsSearching(false);
+        }
+      }, 500); // 500ms delay
     } else {
       setResults([]);
+      setIsSearching(false);
     }
   };
 
@@ -161,7 +172,7 @@ export default function Home() {
 
             {/* Resultados da Pesquisa ou Sugestões Populares  */}
             <div className="p-4 max-h-[350px] overflow-y-auto mr-2">
-              {loading ? (
+              {loading || isSearching ? (
                 <div>
                   <h2 className="text-sm font-semibold text-gray-500 mb-4 pl-2">RESULTADOS DA PESQUISA</h2>
                   <SearchResultSkeleton />
