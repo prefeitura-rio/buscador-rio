@@ -80,18 +80,10 @@ export default function Home() {
     setResults([]);
   };
 
-  const handleSubmitSearchWrapper = () => {
-    handleSubmitSearch(query);
-  };
-
-  const handleItemClickWrapper = (item: SearchResultItem, index: number) => {
-    handleItemClick(item, index, query, noticias_toggled);
-  };
-
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       sendGAEvent('event', 'apertou enter para pesquisar na home');
-      handleSubmitSearchWrapper();
+      handleSubmitSearch(query);
     }
   };
 
@@ -161,7 +153,7 @@ export default function Home() {
                 <button 
                   onClick={() => {
                     sendGAEvent('event', 'clicou no botão de pesquisar no searchbar da home');
-                    handleSubmitSearchWrapper();
+                    handleSubmitSearch(query);
                   }}
                   className="text-gray-400 hover:text-gray-600 cursor-pointer"
                 >
@@ -189,7 +181,7 @@ export default function Home() {
                             <div 
                               className="flex items-center gap-3 hover:bg-gray-50 p-2 rounded-lg cursor-pointer"
                               onClick={() => {
-                                handleItemClickWrapper(item, index);
+                                handleItemClick(item, index, query, noticias_toggled);
                               }}
                             >
                               <div className="flex-1">
