@@ -1,7 +1,6 @@
 'use client'
 import { useState, useEffect, useRef } from 'react';
 import { ArrowRightIcon, TrendingUp, ExternalLinkIcon, X } from 'lucide-react';
-// import { ArrowRightIcon, Plus, Image as ImageIcon, Mic } from 'lucide-react';
 import Image from 'next/image';
 import "./globals.css"
 import { useRouter } from 'next/navigation';
@@ -15,17 +14,18 @@ import { v4 as uuidv4 } from 'uuid';
 import { useSearchHandlers } from '@/hooks/useSearchHandlers';
 import { sendGAEvent } from '@next/third-parties/google'
 import { toast } from 'sonner';
-
+import { useSearchContext } from '@/context/SearchContext';
 
 export default function Home() {
   const [query, setQuery] = useState('');
-  const noticias_toggled = false; 
+  const noticias_toggled = false;
   const [isFocused, setIsFocused] = useState(false);
   const [results, setResults] = useState<SearchResultItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const router = useRouter()
   const { handleSubmitSearch, handleItemClick, handleSearchApi } = useSearchHandlers();
+  const { setCachedResults, setQuery: setContextQuery } = useSearchContext();
   const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
@@ -46,6 +46,7 @@ export default function Home() {
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newQuery = e.target.value;
     setQuery(newQuery);
+    setContextQuery(newQuery);
 
     if (debounceTimeout.current) {
       clearTimeout(debounceTimeout.current);
@@ -58,6 +59,7 @@ export default function Home() {
         try {
           const results = await handleSearchApi(newQuery);
           setResults(results);
+          setCachedResults(results);
         } catch (error) {
           console.error("Error fetching search results:", error);
           setResults([]);
@@ -78,12 +80,13 @@ export default function Home() {
     e.stopPropagation();
     setQuery('');
     setResults([]);
+    setContextQuery('');
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
-      sendGAEvent('event', 'apertou enter para pesquisar na home');
       handleSubmitSearch(query);
+      sendGAEvent('event', 'apertou enter para pesquisar na home');
     }
   };
 
@@ -91,9 +94,7 @@ export default function Home() {
   const filteredResults = results.filter(item => item.tipo !== 'noticia');
 
   return (
-    <div 
-      className="flex flex-col items-center justify-center min-h-screen"
-    >
+    <div className="flex flex-col items-center justify-center min-h-screen">
       <div className="absolute inset-0 flex flex-col">
         {/* Logo da Prefeitura */}
         <div className="relative flex items-center gap-2 mt-10 justify-center">
@@ -139,7 +140,7 @@ export default function Home() {
             <div className="absolute right-4 top-[18px] flex items-center gap-2">
               {query && (
                 <>
-                  <button 
+                  <button
                     onClick={clearSearch}
                     onMouseDown={(e) => e.preventDefault()}
                     className="text-gray-400 hover:text-gray-600 cursor-pointer"
@@ -150,10 +151,10 @@ export default function Home() {
                 </>
               )}
               {query && (
-                <button 
+                <button
                   onClick={() => {
-                    sendGAEvent('event', 'clicou no botão de pesquisar no searchbar da home');
                     handleSubmitSearch(query);
+                    sendGAEvent('event', 'clicou no botão de pesquisar no searchbar da home');
                   }}
                   className="text-gray-400 hover:text-gray-600 cursor-pointer"
                 >
@@ -178,7 +179,7 @@ export default function Home() {
                         const link = item.url;
                         return (
                           <div key={index}>
-                            <div 
+                            <div
                               className="flex items-center gap-3 hover:bg-gray-50 p-2 rounded-lg cursor-pointer"
                               onClick={() => {
                                 handleItemClick(item, index, query, noticias_toggled);
@@ -219,10 +220,11 @@ export default function Home() {
                   <div className="space-y-3">
                     {popularSearches.map((item, index) => (
                       <div key={index}>
-                        <div 
+                        <div
                           className="flex items-center gap-3 hover:bg-gray-50 p-2 rounded-lg cursor-pointer"
                           onClick={() => {
                             setQuery(item.text);
+                            setContextQuery(item.text);
                             router.push(`/search-result?q=${encodeURIComponent(item.text)}`);
                           }}
                         >
@@ -240,27 +242,6 @@ export default function Home() {
             </div>
           </div>
         </div>
-
-        {/* Botões de adicionar arquivos, imagem e áudio */}
-        {/* <div className="flex gap-4 mt-4">
-          <button className="flex flex-row items-center gap-2 px-4 py-2 rounded-full text-gray-400 bg-white hover:bg-gray-100">
-            <Plus size={20} /> Adicionar arquivos
-          </button>
-          <button className="flex flex-row items-center gap-2 px-4 py-2 rounded-full text-gray-400 bg-white hover:bg-gray-100">
-            <ImageIcon size={20} /> Adicionar Imagem
-          </button>
-          <button className="flex flex-row items-center gap-2 px-4 py-2 rounded-full text-gray-400 bg-white hover:bg-gray-100">
-            <Mic size={20} /> Enviar áudio
-          </button>
-        </div> */}
-
-        {/* Botão principal */}
-        {/* <button 
-          onClick={() => router.push('/learn-more')} 
-          className="hover:cursor-pointer mt-30 px-5 py-2 text-white rounded-full text-md bg-linear-to-r/srgb from-[#27B8DB] to-[#3F38AC]"
-        >
-          Preciso de ajuda
-        </button> */}
       </div>
     </div>
   );

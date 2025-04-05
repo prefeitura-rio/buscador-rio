@@ -5,6 +5,7 @@ import { GoogleAnalytics } from "@next/third-parties/google";
 import NetworkStatusProvider from "./components/NetworkStatusProvider";
 import { Toaster } from "@/components/ui/sonner";
 import ReCaptchaProvider from "./components/ReCaptchaProvider";
+import { SearchProvider } from "@/context/SearchContext";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -29,7 +30,11 @@ export default function RootLayout({
         className={`${dmSans.variable} font-sans antialiased relative bg-[#F8F8F8] bg-[url('/background-pattern.svg')] bg-center bg-[length:100%_auto] bg-fixed bg-no-repeat`}
       >
         <NetworkStatusProvider>
-          <ReCaptchaProvider>{children}</ReCaptchaProvider>
+          <ReCaptchaProvider>
+            <SearchProvider>
+            {children}
+            </SearchProvider>
+          </ReCaptchaProvider>
         </NetworkStatusProvider>
         <Toaster />
       </body>

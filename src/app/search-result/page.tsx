@@ -14,6 +14,7 @@ import { sendGAEvent } from '@next/third-parties/google'
 import { useSearchHandlers } from '@/hooks/useSearchHandlers';
 import { toast } from 'sonner';
 import { useReCaptcha } from '@/hooks/useReCaptcha'
+import { useSearchContext } from '@/context/SearchContext';
 
 function SearchResultContent() {
   const searchParams = useSearchParams()
@@ -23,11 +24,21 @@ function SearchResultContent() {
   const [showNoticias, setShowNoticias] = useState(false)
   const { handleSubmitSearch, handleItemClick, handleSearchApi } = useSearchHandlers();
   const { isReady } = useReCaptcha();
+  const { cachedResults, query: contextQuery } = useSearchContext();
 
   useEffect(() => {
     const fetchResults = async () => {
       if (query && isReady) {
         setLoading(true);
+
+        // Use cached results if available and query matches
+        if (query === contextQuery && cachedResults.length > 0) {
+          setResults(cachedResults);
+          setLoading(false);
+          return;
+        }
+
+        // Otherwise fetch new results
         try {
           const data = await handleSearchApi(query);
           setResults(data);
@@ -42,7 +53,7 @@ function SearchResultContent() {
     };
 
     fetchResults();
-  }, [query, handleSearchApi, isReady]); 
+  }, [query, handleSearchApi, isReady, cachedResults, contextQuery]);
 
   const filteredResults = showNoticias ? results : results.filter(item => item.tipo !== 'noticia')
 
@@ -134,7 +145,7 @@ export default function SearchResult() {
               src="/logo_prefeitura.svg"
               alt="Prefeitura do Rio"
               width={80}
-              height={100}
+              height={32}
               className="brightness-0 invert cursor-pointer"
             />
             <div className="flex flex-row gap-6">
@@ -172,5 +183,5 @@ export default function SearchResult() {
         <SearchResultContent />
       </Suspense>
     </div>
-  )
+  );
 }
