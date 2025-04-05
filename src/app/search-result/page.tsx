@@ -9,19 +9,19 @@ import { SearchResultItem } from '@/types'
 import { Facebook, Instagram, Youtube } from 'lucide-react'
 import { FaXTwitter } from "react-icons/fa6";
 import { displayTipo } from '@/utils/tipos'
-import { Switch } from '@/components/ui/switch'
 import { sendGAEvent } from '@next/third-parties/google'
 import { useSearchHandlers } from '@/hooks/useSearchHandlers';
 import { toast } from 'sonner';
 import { useReCaptcha } from '@/hooks/useReCaptcha'
 import { useSearchContext } from '@/context/SearchContext';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 
 function SearchResultContent() {
   const searchParams = useSearchParams()
   const query = searchParams?.get('q') || ''
   const [results, setResults] = useState<SearchResultItem[]>([])
   const [loading, setLoading] = useState(true)
-  const [showNoticias, setShowNoticias] = useState(false)
+  const [filterTypes, setFilterTypes] = useState<string[]>(['servicos'])
   const { handleSubmitSearch, handleItemClick, handleSearchApi } = useSearchHandlers();
   const { isReady } = useReCaptcha();
   const { cachedResults, query: contextQuery } = useSearchContext();
@@ -55,25 +55,62 @@ function SearchResultContent() {
     fetchResults();
   }, [query, handleSearchApi, isReady, cachedResults, contextQuery]);
 
-  const filteredResults = showNoticias ? results : results.filter(item => item.tipo !== 'noticia')
+  const filteredResults = results.filter(item => {
+    if (filterTypes.includes('servicos') && filterTypes.includes('noticias')) {
+      return true;
+    }
+    if (filterTypes.includes('servicos')) {
+      return item.tipo !== 'noticia';
+    }
+    if (filterTypes.includes('noticias')) {
+      return item.tipo === 'noticia';
+    }
+    return false;
+  });
 
-  const handleCheckedChange = (checked: boolean) => {
-    setShowNoticias(checked);
-    sendGAEvent('event', 'toggle de notícias selecionado', { value: checked ? 'Notícias on' : 'Notícias off' });
+  const handleFilterChange = (value: string[]) => {
+    // Ensure at least one toggle is selected
+    if (value.length === 0) {
+      toast.error('Pelo menos um filtro deve estar selecionado.');
+      return;
+    }
+
+    setFilterTypes(value);
+    sendGAEvent('event', 'filtro alterado', {
+      servicos: value.includes('servicos') ? 'on' : 'off',
+      noticias: value.includes('noticias') ? 'on' : 'off',
+    });
   };
 
   return (
     <div className="max-w-[800px] mx-auto px-4 py-8">
-      {/* Search Bar and Switch */}
+      {/* Search Bar and Toggle Group */}
+    
       <div className="flex flex-col mb-6">
         <SearchBar defaultValue={query} onSearch={handleSubmitSearch} className="mb-3" />
-        <div className="flex justify-end items-center gap-2">
-          <Switch
-            className="hover:cursor-pointer"
-            checked={showNoticias}
-            onCheckedChange={handleCheckedChange}
-          />
-          <span className="text-sm text-gray-500">Mostrar notícias relacionadas</span>
+        <div className="flex items-center gap-2">
+          <ToggleGroup
+            type="multiple"
+            value={filterTypes}
+            onValueChange={handleFilterChange}
+            className="flex-wrap gap-2"
+            variant="outline"
+          >
+            <ToggleGroupItem
+              value="servicos"
+              className={`rounded-full bg-white text-gray-600 border border-gray-300 hover:bg-gray-50 data-[state=on]:bg-[#008FBE] data-[state=on]:text-white px-4 h-9 text-sm font-medium transition-colors ${filterTypes.length === 1 && filterTypes.includes('servicos') ? 'cursor-not-allowed' : 'cursor-pointer'
+                }`}
+            >
+              Serviços e Informações
+            </ToggleGroupItem>
+            <ToggleGroupItem
+              value="noticias"
+              className={`rounded-full bg-white text-gray-600 border border-gray-300 hover:bg-gray-50 data-[state=on]:bg-[#008FBE] data-[state=on]:text-white px-4 h-9 text-sm font-medium transition-colors ${filterTypes.length === 1 && filterTypes.includes('noticias') ? 'cursor-not-allowed' : 'cursor-pointer'
+                }`}
+            >
+              Notícias
+            </ToggleGroupItem>
+          </ToggleGroup>
         </div>
       </div>
 
@@ -84,16 +121,16 @@ function SearchResultContent() {
         <SearchResultSkeleton />
       ) : (
         <>
-      <div className="text-sm text-gray-500 mb-4">
-        {filteredResults.length} Resultados
-      </div>
+          <div className="text-sm text-gray-500 mb-4">
+            {filteredResults.length} Resultados
+          </div>
           {filteredResults.length > 0 ? (
             <div className="space-y-4">
               {filteredResults.map((item, index) => (
                 <div
                   key={index}
                   className={`bg-white rounded-lg shadow-sm p-6 hover:bg-gray-50 ${(item.url) ? 'cursor-pointer' : 'cursor-default'}`}
-                  onClick={() => handleItemClick(item, index, query, showNoticias)}
+                  onClick={() => handleItemClick(item, index, query, filterTypes.includes('noticias'))}
                 >
                   <div className="flex items-start gap-4">
                     <div className="flex-1">
