@@ -19,6 +19,7 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 function SearchResultContent() {
   const searchParams = useSearchParams()
   const query = searchParams?.get('q') || ''
+  const router = useRouter()
   const [results, setResults] = useState<SearchResultItem[]>([])
   const [loading, setLoading] = useState(true)
   const [filterTypes, setFilterTypes] = useState<string[]>(['servicos'])
@@ -27,6 +28,11 @@ function SearchResultContent() {
   const { cachedResults, query: contextQuery } = useSearchContext();
 
   useEffect(() => {
+    if (!query) {
+      router.push('/');
+      return;
+    }
+
     const fetchResults = async () => {
       if (query && isReady) {
         setLoading(true);
@@ -53,7 +59,7 @@ function SearchResultContent() {
     };
 
     fetchResults();
-  }, [query, handleSearchApi, isReady, cachedResults, contextQuery]);
+  }, [query, handleSearchApi, isReady, cachedResults, contextQuery, router]);
 
   const filteredResults = results.filter(item => {
     if (filterTypes.includes('servicos') && filterTypes.includes('noticias')) {
