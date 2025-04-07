@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation'
 import { SearchResultItem } from '@/types'
 import { Facebook, Instagram, Youtube } from 'lucide-react'
 import { FaXTwitter } from "react-icons/fa6";
-import { displayTipo } from '@/utils/tipos'
+import { displayBreadCrumbCollection, displayTipo } from '@/utils/tipos'
 import { sendGAEvent } from '@next/third-parties/google'
 import { useSearchHandlers } from '@/hooks/useSearchHandlers';
 import { toast } from 'sonner';
@@ -153,7 +153,7 @@ function SearchResultContent() {
                         <span className="text-gray-500 whitespace-nowrap">{'>'}</span>
                         <span className="text-gray-nowrap text-gray-500">{item.category?.specific}</span>
                         <span className="bg-gray-200 rounded-xl text-xs text-gray-500 px-2 py-0.5 whitespace-nowrap">
-                          {item.id_1746 ? "1746" : item.id_carioca_digital ? "carioca digital" : "prefeitura rio"}
+                        {displayBreadCrumbCollection(item.collection)}
                         </span>
                       </div>
                       {item.descricao && <hr className="border-gray-200 my-4" />}

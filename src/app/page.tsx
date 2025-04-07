@@ -8,7 +8,7 @@ import { SearchResultItem } from '@/types';
 import { popularSearches } from '@/utils/popularSearchs';
 import SearchResultSkeleton from '@/app/components/SearchResultSkeletonHome';
 import Link from 'next/link';
-import { displayTipo } from '@/utils/tipos';
+import { displayBreadCrumbCollection, displayTipo } from '@/utils/tipos';
 import { setCookie, parseCookies } from 'nookies';
 import { v4 as uuidv4 } from 'uuid';
 import { useSearchHandlers } from '@/hooks/useSearchHandlers';
@@ -198,7 +198,7 @@ export default function Home() {
                                   <span className="text-gray-500">{item.category?.micro}</span>
                                   <span className="text-gray-500">{'>'}</span>
                                   <span className="text-gray-500">{item.category?.specific}</span>
-                                  <span className="bg-gray-200 rounded-xl text-xs text-gray-500 px-2 py-0.5">{item.id_1746 ? "1746" : item.id_carioca_digital ? "carioca digital" : "prefeitura rio"}</span>
+                                  <span className="bg-gray-200 rounded-xl text-xs text-gray-500 px-2 py-0.5">{displayBreadCrumbCollection(item.collection)}</span>
                                 </div>
                               </div>
                               {link && (
