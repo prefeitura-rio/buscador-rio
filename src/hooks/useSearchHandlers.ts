@@ -20,12 +20,11 @@ export const useSearchHandlers = () => {
     return "Unknown";
   };
 
-
-  const handleSubmitSearch = async (query: string) => {
+  const handleSubmitSearch = async (query: string, llm_reorder: boolean) => {
     if (query.trim()) {
       const cookies = parseCookies();
       const session_id = cookies.session_id;
-      const portal_origem = "Buscador Rio"
+      const portal_origem = "Buscador Rio";
       const tipo_dispositivo = getTipoDispositivo();
 
       // Get reCAPTCHA token
@@ -43,6 +42,7 @@ export const useSearchHandlers = () => {
             query,
             portal_origem,
             tipo_dispositivo,
+            llm_reorder, // New parameter
           }),
         });
 
@@ -62,7 +62,8 @@ export const useSearchHandlers = () => {
     item: SearchResultItem,
     index: number,
     query: string,
-    noticias_toggled: boolean
+    filters: string[], // Replaced noticias_toggled with filters
+    llm_reorder: boolean
   ) => {
     const cookies = parseCookies();
     const session_id = cookies.session_id;
@@ -86,7 +87,8 @@ export const useSearchHandlers = () => {
           objeto_clicado: item,
           portal_origem,
           tipo_dispositivo,
-          noticias_toggled,
+          filters, // Replaced noticias_toggled with filters
+          llm_reorder,
         }),
       });
 
@@ -97,10 +99,9 @@ export const useSearchHandlers = () => {
       console.error("Error logging click metrics:", error);
     }
 
-   if (link) {
-     window.location.href = link;
-   }
-
+    if (link) {
+      window.location.href = link;
+    }
   };
 
   const handleSearchApi = useCallback(

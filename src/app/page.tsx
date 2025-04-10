@@ -17,7 +17,6 @@ import { toast } from 'sonner';
 
 export default function Home() {
   const [query, setQuery] = useState('');
-  const noticias_toggled = false;
   const [isFocused, setIsFocused] = useState(false);
   const [results, setResults] = useState<SearchResultItem[]>([]);
   const [loading, setLoading] = useState(false);
@@ -80,7 +79,7 @@ export default function Home() {
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
-      handleSubmitSearch(query);
+      handleSubmitSearch(query, false);
       sendGAEvent('event', 'apertou enter para pesquisar na home');
     }
   };
@@ -148,7 +147,7 @@ export default function Home() {
               {query && (
                 <button
                   onClick={() => {
-                    handleSubmitSearch(query);
+                    handleSubmitSearch(query, false);
                     sendGAEvent('event', 'clicou no botão de pesquisar no searchbar da home');
                   }}
                   className="text-gray-400 hover:text-gray-600 cursor-pointer"
@@ -177,7 +176,7 @@ export default function Home() {
                             <div
                               className="flex items-center gap-3 hover:bg-gray-50 p-2 rounded-lg cursor-pointer"
                               onClick={() => {
-                                handleItemClick(item, index, query, noticias_toggled);
+                                handleItemClick(item, index, query, ['servicos'], false);
                               }}
                             >
                               <div className="flex-1">

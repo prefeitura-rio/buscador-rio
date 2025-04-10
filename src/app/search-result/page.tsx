@@ -83,7 +83,7 @@ function SearchResultContent() {
       {/* Search Bar and Toggle Group */}
     
       <div className="flex flex-col mb-6">
-        <SearchBar defaultValue={query} onSearch={handleSubmitSearch} className="mb-3" />
+        <SearchBar defaultValue={query} onSearch={(query) => handleSubmitSearch(query, true)} className="mb-3" />
         <div className="flex items-center gap-2">
           <ToggleGroup
             type="multiple"
@@ -126,7 +126,7 @@ function SearchResultContent() {
                 <div
                   key={index}
                   className={`bg-white rounded-lg shadow-sm p-6 hover:bg-gray-50 ${(item.url) ? 'cursor-pointer' : 'cursor-default'}`}
-                  onClick={() => handleItemClick(item, index, query, filterTypes.includes('noticias'))}
+                  onClick={() => handleItemClick(item, index, query, filterTypes, true)}
                 >
                   <div className="flex items-start gap-4">
                     <div className="flex-1">
