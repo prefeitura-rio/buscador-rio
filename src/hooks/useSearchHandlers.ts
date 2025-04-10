@@ -25,7 +25,7 @@ export const useSearchHandlers = () => {
     if (query.trim()) {
       const cookies = parseCookies();
       const session_id = cookies.session_id;
-      const portal_origem = "Buscador Rio;"
+      const portal_origem = "Buscador Rio"
       const tipo_dispositivo = getTipoDispositivo();
 
       // Get reCAPTCHA token
@@ -67,7 +67,7 @@ export const useSearchHandlers = () => {
     const cookies = parseCookies();
     const session_id = cookies.session_id;
     const link = item.url;
-    const portal_origem = "Buscador Rio;";
+    const portal_origem = "Buscador Rio";
     const tipo_dispositivo = getTipoDispositivo();
 
     // Get reCAPTCHA token
