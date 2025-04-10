@@ -14,7 +14,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { useSearchHandlers } from '@/hooks/useSearchHandlers';
 import { sendGAEvent } from '@next/third-parties/google'
 import { toast } from 'sonner';
-import { useSearchContext } from '@/context/SearchContext';
 
 export default function Home() {
   const [query, setQuery] = useState('');
@@ -25,7 +24,6 @@ export default function Home() {
   const [isSearching, setIsSearching] = useState(false);
   const router = useRouter()
   const { handleSubmitSearch, handleItemClick, handleSearchApi } = useSearchHandlers();
-  const { setCachedResults, setQuery: setContextQuery } = useSearchContext();
   const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
@@ -46,7 +44,6 @@ export default function Home() {
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newQuery = e.target.value;
     setQuery(newQuery);
-    setContextQuery(newQuery);
 
     if (debounceTimeout.current) {
       clearTimeout(debounceTimeout.current);
@@ -57,9 +54,8 @@ export default function Home() {
       debounceTimeout.current = setTimeout(async () => {
         setLoading(true);
         try {
-          const results = await handleSearchApi(newQuery);
+          const results = await handleSearchApi(newQuery, false);
           setResults(results);
-          setCachedResults(results);
         } catch (error) {
           console.error("Error fetching search results:", error);
           setResults([]);
@@ -80,7 +76,6 @@ export default function Home() {
     e.stopPropagation();
     setQuery('');
     setResults([]);
-    setContextQuery('');
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -224,7 +219,6 @@ export default function Home() {
                           className="flex items-center gap-3 hover:bg-gray-50 p-2 rounded-lg cursor-pointer"
                           onClick={() => {
                             setQuery(item.text);
-                            setContextQuery(item.text);
                             router.push(`/search-result?q=${encodeURIComponent(item.text)}`);
                           }}
                         >

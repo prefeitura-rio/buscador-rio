@@ -5,7 +5,6 @@ import { GoogleAnalytics } from "@next/third-parties/google";
 import NetworkStatusProvider from "./components/NetworkStatusProvider";
 import { Toaster } from "@/components/ui/sonner";
 import ReCaptchaProvider from "./components/ReCaptchaProvider";
-import { SearchProvider } from "@/context/SearchContext";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -31,9 +30,7 @@ export default function RootLayout({
       >
         <NetworkStatusProvider>
           <ReCaptchaProvider>
-            <SearchProvider>
             {children}
-            </SearchProvider>
           </ReCaptchaProvider>
         </NetworkStatusProvider>
         <Toaster />

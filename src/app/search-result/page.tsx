@@ -13,7 +13,6 @@ import { sendGAEvent } from '@next/third-parties/google'
 import { useSearchHandlers } from '@/hooks/useSearchHandlers';
 import { toast } from 'sonner';
 import { useReCaptcha } from '@/hooks/useReCaptcha'
-import { useSearchContext } from '@/context/SearchContext';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 
 function SearchResultContent() {
@@ -25,7 +24,6 @@ function SearchResultContent() {
   const [filterTypes, setFilterTypes] = useState<string[]>(['servicos'])
   const { handleSubmitSearch, handleItemClick, handleSearchApi } = useSearchHandlers();
   const { isReady } = useReCaptcha();
-  const { cachedResults, query: contextQuery } = useSearchContext();
 
   useEffect(() => {
     if (!query) {
@@ -37,16 +35,8 @@ function SearchResultContent() {
       if (query && isReady) {
         setLoading(true);
 
-        // Use cached results if available and query matches
-        if (query === contextQuery && cachedResults.length > 0) {
-          setResults(cachedResults);
-          setLoading(false);
-          return;
-        }
-
-        // Otherwise fetch new results
         try {
-          const data = await handleSearchApi(query);
+          const data = await handleSearchApi(query, true);
           setResults(data);
         } catch (error) {
           console.error('Error fetching search results:', error);
@@ -59,7 +49,7 @@ function SearchResultContent() {
     };
 
     fetchResults();
-  }, [query, handleSearchApi, isReady, cachedResults, contextQuery, router]);
+  }, [query, handleSearchApi, isReady, router]);
 
   const filteredResults = results.filter(item => {
     if (filterTypes.includes('servicos') && filterTypes.includes('noticias')) {

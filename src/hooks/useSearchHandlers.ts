@@ -104,7 +104,7 @@ export const useSearchHandlers = () => {
   };
 
   const handleSearchApi = useCallback(
-    async (query: string): Promise<SearchResultItem[]> => {
+    async (query: string, llm_reorder: boolean): Promise<SearchResultItem[]> => {
       if (!query.trim() || query.trim().length <= 2) {
         return [];
       }
@@ -113,7 +113,7 @@ export const useSearchHandlers = () => {
 
       try {
         const response = await fetch(
-          `/api/search?q=${encodeURIComponent(query)}`,
+          `/api/search?q=${encodeURIComponent(query)}&llm_reorder=${llm_reorder}`, // Include llm_reorder in the query string
           {
             headers: {
               ...(recaptchaToken
