@@ -20,26 +20,12 @@ export const useSearchHandlers = () => {
     return "Unknown";
   };
 
-  // Function to determine the portal origin
-  const getPortalOrigem = () => {
-    if (typeof window !== "undefined") {
-      const hostname = window.location.hostname;
-      if (hostname.includes("1746")) {
-        return "1746";
-      } else if (hostname.includes("prefeitura")) {
-        return "Prefeitura Rio";
-      } else if (hostname.includes("buscador")) {
-        return "Buscador Rio";
-      }
-    }
-    return "Unknown";
-  };
 
   const handleSubmitSearch = async (query: string) => {
     if (query.trim()) {
       const cookies = parseCookies();
       const session_id = cookies.session_id;
-      const portal_origem = getPortalOrigem();
+      const portal_origem = "Buscador Rio;"
       const tipo_dispositivo = getTipoDispositivo();
 
       // Get reCAPTCHA token
@@ -81,7 +67,7 @@ export const useSearchHandlers = () => {
     const cookies = parseCookies();
     const session_id = cookies.session_id;
     const link = item.url;
-    const portal_origem = getPortalOrigem();
+    const portal_origem = "Buscador Rio;";
     const tipo_dispositivo = getTipoDispositivo();
 
     // Get reCAPTCHA token
