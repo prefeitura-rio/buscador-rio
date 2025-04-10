@@ -92,7 +92,9 @@ export default function Home() {
       <div className="absolute inset-0 flex flex-col">
         {/* Logo da Prefeitura */}
         <div className="relative flex items-center gap-2 mt-10 justify-center">
-          <Image src="/logo_prefeitura.svg" alt="Prefeitura do Rio" width={80} height={100} className="mb-6" />
+          <Link href="https://prefeitura.rio" target="_blank" rel="noopener noreferrer">
+            <Image src="/logo_prefeitura.svg" alt="Prefeitura do Rio" width={80} height={32} className="mb-6" />
+          </Link>
         </div>
 
         {/* Logo IplanRio */}

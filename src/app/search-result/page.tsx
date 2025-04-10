@@ -14,6 +14,7 @@ import { useSearchHandlers } from '@/hooks/useSearchHandlers';
 import { toast } from 'sonner';
 import { useReCaptcha } from '@/hooks/useReCaptcha'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import Link from 'next/link'
 
 function SearchResultContent() {
   const searchParams = useSearchParams()
@@ -165,7 +166,6 @@ function SearchResultContent() {
 }
 
 export default function SearchResult() {
-  const router = useRouter()
 
   return (
     <div className="min-h-screen">
@@ -173,14 +173,15 @@ export default function SearchResult() {
       <div className="bg-[#008FBE] py-4">
         <div className="flex justify-center">
           <div className="mx-4 md:mx-0 w-full max-w-[760px] flex justify-between">
-            <Image
-              onClick={() => router.push('/')}
-              src="/logo_prefeitura.svg"
-              alt="Prefeitura do Rio"
-              width={80}
-              height={32}
-              className="brightness-0 invert cursor-pointer"
-            />
+            <Link href="https://prefeitura.rio" target="_blank" rel="noopener noreferrer">
+              <Image
+                src="/logo_prefeitura.svg"
+                alt="Prefeitura do Rio"
+                width={80}
+                height={32}
+                className="brightness-0 invert cursor-pointer"
+              />
+            </Link>
             <div className="flex flex-row gap-6">
               <button
                 className="text-white hover:text-gray-600 cursor-pointer"
