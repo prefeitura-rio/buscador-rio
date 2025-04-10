@@ -107,7 +107,7 @@ function SearchResultContent() {
               className={`rounded-full bg-white text-gray-600 border border-gray-300 hover:bg-gray-50 data-[state=on]:bg-[#008FBE] data-[state=on]:text-white px-4 h-9 text-sm font-medium transition-colors ${filterTypes.length === 1 && filterTypes.includes('servicos') ? 'cursor-not-allowed' : 'cursor-pointer'
                 }`}
             >
-              Serviços e Informações
+              Serviços
             </ToggleGroupItem>
             <ToggleGroupItem
               value="noticias"
