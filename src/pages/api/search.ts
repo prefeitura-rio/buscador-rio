@@ -4,7 +4,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-   const { q } = req.query;
+   const { q, llm_reorder } = req.query;
    const recaptchaToken = req.headers["x-recaptcha-token"];
    const token = process.env.TYPESENSE_API_TOKEN;
 
@@ -18,7 +18,7 @@ export default async function handler(
    const rootUrl = process.env.API_ROOT_URL;
   try {
     const response = await fetch(
-      `${rootUrl}/search/multi?q=${q}&cs=carioca-digital,1746,pref-rio`,
+      `${rootUrl}/search/multi?q=${q}&llm_reorder=${llm_reorder}&cs=carioca-digital,1746,pref-rio`,
       {
         headers,
       }

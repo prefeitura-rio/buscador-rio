@@ -4,7 +4,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { session_id, query, portal_origem, tipo_dispositivo } = req.body;
+  const { session_id, query, portal_origem, tipo_dispositivo, llm_reorder } = req.body;
   const recaptchaToken = req.headers["x-recaptcha-token"];
   const token = process.env.TYPESENSE_API_TOKEN;
 
@@ -27,6 +27,7 @@ export default async function handler(
         query,
         portal_origem,
         tipo_dispositivo,
+        llm_reorder,
       }),
     });
 

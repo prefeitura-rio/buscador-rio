@@ -12,6 +12,7 @@ export default async function handler(
     posicao,
     objeto_clicado,
     noticias_toggled,
+    llm_reorder,
   } = req.body;
 
   const recaptchaToken = req.headers["x-recaptcha-token"];
@@ -39,6 +40,7 @@ export default async function handler(
         posicao,
         objeto_clicado,
         noticias_toggled,
+        llm_reorder,
       }),
     });
 

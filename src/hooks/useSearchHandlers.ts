@@ -42,7 +42,7 @@ export const useSearchHandlers = () => {
             query,
             portal_origem,
             tipo_dispositivo,
-            llm_reorder, // New parameter
+            llm_reorder,
           }),
         });
 
@@ -62,7 +62,7 @@ export const useSearchHandlers = () => {
     item: SearchResultItem,
     index: number,
     query: string,
-    filters: string[], // Replaced noticias_toggled with filters
+    filters: string[],
     llm_reorder: boolean
   ) => {
     const cookies = parseCookies();
@@ -87,7 +87,7 @@ export const useSearchHandlers = () => {
           objeto_clicado: item,
           portal_origem,
           tipo_dispositivo,
-          filters, // Replaced noticias_toggled with filters
+          filters,
           llm_reorder,
         }),
       });
@@ -114,7 +114,7 @@ export const useSearchHandlers = () => {
 
       try {
         const response = await fetch(
-          `/api/search?q=${encodeURIComponent(query)}&llm_reorder=${llm_reorder}`, // Include llm_reorder in the query string
+          `/api/search?q=${encodeURIComponent(query)}&llm_reorder=${llm_reorder}`,
           {
             headers: {
               ...(recaptchaToken
@@ -123,6 +123,7 @@ export const useSearchHandlers = () => {
             },
           }
         );
+        console.log("param", query, llm_reorder);
 
         if (!response.ok) {
           throw new Error("Failed to fetch search results");

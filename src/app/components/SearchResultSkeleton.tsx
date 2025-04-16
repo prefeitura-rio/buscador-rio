@@ -4,7 +4,7 @@ const SearchResultSkeleton = () => {
   return (
     <>
       <div className="h-4 bg-gray-200 rounded w-24 mb-4"></div>
-      <div className="space-y-4">
+      <div className="max-w-[760px] space-y-4">
         {[...Array(4)].map((_, index) => (
           <div
             key={index}
