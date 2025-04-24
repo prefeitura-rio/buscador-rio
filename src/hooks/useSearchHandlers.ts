@@ -123,7 +123,7 @@ export const useSearchHandlers = () => {
             },
           }
         );
-        console.log("param", query, llm_reorder);
+
 
         if (!response.ok) {
           throw new Error("Failed to fetch search results");

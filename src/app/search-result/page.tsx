@@ -130,7 +130,7 @@ function SearchResultContent() {
                   onClick={() => handleItemClick(item, index, query, filterTypes, true)}
                 >
                   <div className="flex items-start gap-4">
-                    <div className="flex-1">
+                    <div className="flex-1 min-w-0">
                       <h3
                         className="text-gray-900 font-medium mb-2"
                         dangerouslySetInnerHTML={{ __html: item.titulo }}
