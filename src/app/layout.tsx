@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { DM_Sans } from "next/font/google";
 import "./globals.css";
-import { GoogleAnalytics } from '@next/third-parties/google'
+import { GoogleAnalytics } from "@next/third-parties/google";
 import NetworkStatusProvider from "./components/NetworkStatusProvider";
 import { Toaster } from "@/components/ui/sonner";
+import ReCaptchaProvider from "./components/ReCaptchaProvider";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -20,15 +21,17 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const token = process.env.GOOGLE_ANALYTICS_ID || '';
+  const token = process.env.GOOGLE_ANALYTICS_ID || "";
   return (
     <html lang="en">
-      <GoogleAnalytics gaId={token}/>
+      <GoogleAnalytics gaId={token} />
       <body
         className={`${dmSans.variable} font-sans antialiased relative bg-[#F8F8F8] bg-[url('/background-pattern.svg')] bg-center bg-[length:100%_auto] bg-fixed bg-no-repeat`}
       >
         <NetworkStatusProvider>
-        {children}
+          <ReCaptchaProvider>
+            {children}
+          </ReCaptchaProvider>
         </NetworkStatusProvider>
         <Toaster />
       </body>

@@ -31,4 +31,5 @@ export type SearchResultItem = {
     micro: string;
     specific: string;
   };
+  collection?: string;
 };

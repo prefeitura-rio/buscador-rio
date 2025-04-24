@@ -1,9 +1,12 @@
 import { useRouter } from "next/navigation";
 import { parseCookies } from "nookies";
 import { SearchResultItem } from "@/types";
+import { useReCaptcha } from "./useReCaptcha";
+import { useCallback } from "react";
 
 export const useSearchHandlers = () => {
   const router = useRouter();
+  const { getReCaptchaToken } = useReCaptcha();
 
   // Function to determine the device type
   const getTipoDispositivo = () => {
@@ -17,41 +20,41 @@ export const useSearchHandlers = () => {
     return "Unknown";
   };
 
-  // Function to determine the portal origin
-  const getPortalOrigem = () => {
-    if (typeof window !== "undefined") {
-      const hostname = window.location.hostname;
-      if (hostname.includes("1746")) {
-        return "1746";
-      } else if (hostname.includes("prefeitura")) {
-        return "Prefeitura Rio";
-      } else if (hostname.includes("buscador")) {
-        return "Buscador Rio";
-      }
-    }
-    return "Unknown";
-  };
-
-  const handleSubmitSearch = async (query: string) => {
+  const handleSubmitSearch = async (query: string, llm_reorder: boolean) => {
     if (query.trim()) {
       const cookies = parseCookies();
       const session_id = cookies.session_id;
-      const portal_origem = getPortalOrigem();
+      const portal_origem = "Buscador Rio";
       const tipo_dispositivo = getTipoDispositivo();
 
-      await fetch("/api/metrics/busca", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          session_id,
-          query,
-          portal_origem,
-          tipo_dispositivo,
-        }),
-      });
-      router.push(`/search-result?q=${encodeURIComponent(query.trim())}`);
+      // Get reCAPTCHA token
+      const recaptchaToken = await getReCaptchaToken();
+
+      try {
+        const response = await fetch("/api/metrics/busca", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            ...(recaptchaToken ? { "X-Recaptcha-Token": recaptchaToken } : {}),
+          },
+          body: JSON.stringify({
+            session_id,
+            query,
+            portal_origem,
+            tipo_dispositivo,
+            llm_reorder,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to log search metrics");
+        }
+
+        router.push(`/search-result?q=${encodeURIComponent(query.trim())}`);
+      } catch (error) {
+        console.error("Error logging search metrics:", error);
+        router.push(`/search-result?q=${encodeURIComponent(query.trim())}`);
+      }
     }
   };
 
@@ -59,34 +62,82 @@ export const useSearchHandlers = () => {
     item: SearchResultItem,
     index: number,
     query: string,
-    noticias_toggled: boolean
+    filters: string[],
+    llm_reorder: boolean
   ) => {
     const cookies = parseCookies();
     const session_id = cookies.session_id;
     const link = item.url;
-    const portal_origem = getPortalOrigem();
+    const portal_origem = "Buscador Rio";
     const tipo_dispositivo = getTipoDispositivo();
 
-    await fetch("/api/metrics/clique", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        session_id,
-        query,
-        posicao: index,
-        objeto_clicado: item,
-        portal_origem,
-        tipo_dispositivo,
-        noticias_toggled,
-      }),
-    });
+    // Get reCAPTCHA token
+    const recaptchaToken = await getReCaptchaToken();
+    try {
+      const response = await fetch("/api/metrics/clique", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(recaptchaToken ? { "X-Recaptcha-Token": recaptchaToken } : {}),
+        },
+        body: JSON.stringify({
+          session_id,
+          query,
+          posicao: index,
+          objeto_clicado: item,
+          portal_origem,
+          tipo_dispositivo,
+          filters,
+          llm_reorder,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to log click metrics");
+      }
+    } catch (error) {
+      console.error("Error logging click metrics:", error);
+    }
 
     if (link) {
-      window.open(link, "_blank");
+      window.location.href = link;
     }
   };
 
-  return { handleSubmitSearch, handleItemClick };
+  const handleSearchApi = useCallback(
+    async (query: string, llm_reorder: boolean): Promise<SearchResultItem[]> => {
+      if (!query.trim() || query.trim().length <= 2) {
+        return [];
+      }
+
+      const recaptchaToken = await getReCaptchaToken();
+
+      try {
+        const response = await fetch(
+          `/api/search?q=${encodeURIComponent(query)}&llm_reorder=${llm_reorder}`,
+          {
+            headers: {
+              ...(recaptchaToken
+                ? { "X-Recaptcha-Token": recaptchaToken }
+                : {}),
+            },
+          }
+        );
+
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch search results");
+        }
+
+        const data = await response.json();
+        return data.result || [];
+      } catch (error) {
+        console.error("Error fetching search results:", error);
+        throw error;
+      }
+    },
+    [getReCaptchaToken]
+  );
+
+  return { handleSubmitSearch, handleItemClick, handleSearchApi };
 };
