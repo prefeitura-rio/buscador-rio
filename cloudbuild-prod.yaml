@@ -7,7 +7,7 @@ steps:
       - |
         echo "TYPESENSE_API_TOKEN=${_TYPESENSE_API_TOKEN}" > .env.production && \
         echo "GOOGLE_ANALYTICS_ID=G-ZCSXPVQRL3" >> .env.production && \
-        echo "API_ROOT_URL=https://busca.dados.rio" >> .env.production && \
+        echo "API_ROOT_URL=https://services.staging.app.dados.rio/busca" >> .env.production && \
         echo "NEXT_PUBLIC_RECAPTCHA_SITE_KEY=6Le9BwgrAAAAAFsZHFHdv-JWZApR-x-9ZOVnnetv" >> .env.production
   # Build the container image
   - name: "gcr.io/cloud-builders/docker"
